@@ -1,0 +1,9 @@
+{
+  "source_url": "https://github.com/ultralytics/assets/releases/download/v0.0.0/carparts-seg.zip",
+  "archive_path": "data/raw/carparts-seg.zip",
+  "archive_size_bytes": 139535504,
+  "archive_size_formatted": "133.07 MB",
+  "sha256_checksum": "e2eea20030d02366b07174bcdbcc843f63791bdd53962a83e00636d15e78e41f",
+  "extraction_location": "data/processed/carparts-seg",
+  "disk_free_remaining": "917.47 GB"
+}

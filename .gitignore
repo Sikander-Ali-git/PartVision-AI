@@ -1,0 +1,35 @@
+# Virtual Environment
+.venv/
+env/
+venv/
+
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# macOS specific
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
+
+# Dataset raw archives and processed images (reproducible via scripts/download_dataset.py)
+data/raw/*.zip
+data/processed/
+
+# Model Checkpoints (large binary weights)
+models/*.pt
+*.pt
+
+# Training runs & intermediate artifacts
+runs/
+*.log
+
+# Editor & IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

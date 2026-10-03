@@ -1,0 +1,62 @@
+======================================================================
+PartVision AI — Dataset Validation Report
+Dataset: Ultralytics Carparts-Seg
+======================================================================
+
+1. DATASET OVERVIEW & CLASSES
+Dataset root: /Volumes/Toshiba 1TB/PartVision/data/processed/carparts-seg
+Number of classes: 23
+Classes:
+  [ 0] back_bumper
+  [ 1] back_door
+  [ 2] back_glass
+  [ 3] back_left_door
+  [ 4] back_left_light
+  [ 5] back_light
+  [ 6] back_right_door
+  [ 7] back_right_light
+  [ 8] front_bumper
+  [ 9] front_door
+  [10] front_glass
+  [11] front_left_door
+  [12] front_left_light
+  [13] front_light
+  [14] front_right_door
+  [15] front_right_light
+  [16] hood
+  [17] left_mirror
+  [18] object
+  [19] right_mirror
+  [20] tailgate
+  [21] trunk
+  [22] wheel
+
+2. SPLIT BREAKDOWN
+Split      Images     Labels     Empty      Missing    Orphan     Annotations 
+------------------------------------------------------------------------
+train      3156       3156       116        0          0          16733       
+val        401        401        12         0          0          2042        
+test       276        276        7          0          0          1599        
+------------------------------------------------------------------------
+Total      3833       3833       135        0          0          20374       
+
+3. INTEGRITY & QUALITY CHECKS
+Corrupt Images: 0
+Malformed Annotation Lines: 0
+Empty Annotation Files: 135
+Missing Label Files: 0
+Orphan Label Files: 0
+
+4. IMAGE DIMENSIONS
+Split 'train' image dimensions:
+  640x640: 3156 images (100.0%)
+Split 'val' image dimensions:
+  640x640: 401 images (100.0%)
+Split 'test' image dimensions:
+  640x640: 276 images (100.0%)
+
+5. ANNOTATION FORMAT VALIDATION
+Format: YOLO Polygon Segmentation (<class_id> <x1> <y1> <x2> <y2> ... <xn> <yn>)
+Normalized range: [0.0, 1.0]
+Status: PASSED
+

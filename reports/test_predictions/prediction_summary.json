@@ -1,0 +1,635 @@
+{
+  "model_weights": "/Volumes/Toshiba 1TB/PartVision/models/baseline_yolo11n_seg_best.pt",
+  "confidence_threshold": 0.25,
+  "test_images_count": 8,
+  "predictions": [
+    {
+      "image_filename": "train154_jpg.rf.792f534720f971b25e958c22c40bf0b8.jpg",
+      "saved_prediction": "train154_jpg.rf.792f534720f971b25e958c22c40bf0b8_pred.jpg",
+      "detected_parts_count": 8,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.8796,
+          "box_xyxy": [
+            320.47,
+            270.35,
+            430.68,
+            494.22
+          ],
+          "polygon_points_count": 174
+        },
+        {
+          "detection_id": 2,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.8796,
+          "box_xyxy": [
+            238.73,
+            404.28,
+            282.52,
+            506.11
+          ],
+          "polygon_points_count": 76
+        },
+        {
+          "detection_id": 3,
+          "class_id": 1,
+          "class_name": "back_door",
+          "confidence": 0.7746,
+          "box_xyxy": [
+            202.11,
+            157.13,
+            437.39,
+            285.32
+          ],
+          "polygon_points_count": 201
+        },
+        {
+          "detection_id": 4,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.6236,
+          "box_xyxy": [
+            257.37,
+            312.23,
+            342.38,
+            629.52
+          ],
+          "polygon_points_count": 253
+        },
+        {
+          "detection_id": 5,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.615,
+          "box_xyxy": [
+            144.39,
+            365.17,
+            274.93,
+            631.47
+          ],
+          "polygon_points_count": 236
+        },
+        {
+          "detection_id": 6,
+          "class_id": 1,
+          "class_name": "back_door",
+          "confidence": 0.5944,
+          "box_xyxy": [
+            215.34,
+            94.39,
+            439.42,
+            210.17
+          ],
+          "polygon_points_count": 181
+        },
+        {
+          "detection_id": 7,
+          "class_id": 9,
+          "class_name": "front_door",
+          "confidence": 0.5434,
+          "box_xyxy": [
+            201.02,
+            157.54,
+            435.61,
+            285.52
+          ],
+          "polygon_points_count": 207
+        },
+        {
+          "detection_id": 8,
+          "class_id": 9,
+          "class_name": "front_door",
+          "confidence": 0.3353,
+          "box_xyxy": [
+            213.61,
+            94.63,
+            438.4,
+            211.63
+          ],
+          "polygon_points_count": 180
+        }
+      ]
+    },
+    {
+      "image_filename": "train292_jpg.rf.8cdb3a7f463fc6f33be8113469b51491.jpg",
+      "saved_prediction": "train292_jpg.rf.8cdb3a7f463fc6f33be8113469b51491_pred.jpg",
+      "detected_parts_count": 4,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.902,
+          "box_xyxy": [
+            207.53,
+            315.52,
+            348.35,
+            467.25
+          ],
+          "polygon_points_count": 177
+        },
+        {
+          "detection_id": 2,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.8341,
+          "box_xyxy": [
+            6.63,
+            210.21,
+            165.75,
+            485.37
+          ],
+          "polygon_points_count": 258
+        },
+        {
+          "detection_id": 3,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.8005,
+          "box_xyxy": [
+            248.35,
+            71.1,
+            526.62,
+            510.77
+          ],
+          "polygon_points_count": 517
+        },
+        {
+          "detection_id": 4,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.7701,
+          "box_xyxy": [
+            124.18,
+            89.25,
+            285.66,
+            474.09
+          ],
+          "polygon_points_count": 359
+        }
+      ]
+    },
+    {
+      "image_filename": "train384_jpg.rf.6558520cf31e6a07323e8213a6748b4b.jpg",
+      "saved_prediction": "train384_jpg.rf.6558520cf31e6a07323e8213a6748b4b_pred.jpg",
+      "detected_parts_count": 7,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.965,
+          "box_xyxy": [
+            49.0,
+            235.33,
+            363.18,
+            493.03
+          ],
+          "polygon_points_count": 467
+        },
+        {
+          "detection_id": 2,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.9222,
+          "box_xyxy": [
+            246.3,
+            107.26,
+            476.26,
+            193.43
+          ],
+          "polygon_points_count": 170
+        },
+        {
+          "detection_id": 3,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.8806,
+          "box_xyxy": [
+            97.53,
+            180.84,
+            396.85,
+            253.67
+          ],
+          "polygon_points_count": 205
+        },
+        {
+          "detection_id": 4,
+          "class_id": 19,
+          "class_name": "right_mirror",
+          "confidence": 0.5221,
+          "box_xyxy": [
+            452.34,
+            160.48,
+            521.01,
+            207.42
+          ],
+          "polygon_points_count": 56
+        },
+        {
+          "detection_id": 5,
+          "class_id": 15,
+          "class_name": "front_right_light",
+          "confidence": 0.4398,
+          "box_xyxy": [
+            182.4,
+            247.87,
+            340.95,
+            331.41
+          ],
+          "polygon_points_count": 166
+        },
+        {
+          "detection_id": 6,
+          "class_id": 22,
+          "class_name": "wheel",
+          "confidence": 0.3595,
+          "box_xyxy": [
+            327.29,
+            255.08,
+            611.68,
+            487.96
+          ],
+          "polygon_points_count": 263
+        },
+        {
+          "detection_id": 7,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.3022,
+          "box_xyxy": [
+            183.7,
+            247.61,
+            341.76,
+            331.97
+          ],
+          "polygon_points_count": 169
+        }
+      ]
+    },
+    {
+      "image_filename": "new_56_png_jpg.rf.8d94218cf72b0ce621587873fbb853ed.jpg",
+      "saved_prediction": "new_56_png_jpg.rf.8d94218cf72b0ce621587873fbb853ed_pred.jpg",
+      "detected_parts_count": 7,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 5,
+          "class_name": "back_light",
+          "confidence": 0.9047,
+          "box_xyxy": [
+            294.12,
+            218.3,
+            358.57,
+            337.34
+          ],
+          "polygon_points_count": 109
+        },
+        {
+          "detection_id": 2,
+          "class_id": 0,
+          "class_name": "back_bumper",
+          "confidence": 0.7774,
+          "box_xyxy": [
+            118.76,
+            8.93,
+            249.71,
+            356.72
+          ],
+          "polygon_points_count": 316
+        },
+        {
+          "detection_id": 3,
+          "class_id": 2,
+          "class_name": "back_glass",
+          "confidence": 0.7523,
+          "box_xyxy": [
+            349.94,
+            67.26,
+            425.87,
+            311.7
+          ],
+          "polygon_points_count": 124
+        },
+        {
+          "detection_id": 4,
+          "class_id": 9,
+          "class_name": "front_door",
+          "confidence": 0.6772,
+          "box_xyxy": [
+            117.88,
+            464.63,
+            384.22,
+            592.31
+          ],
+          "polygon_points_count": 230
+        },
+        {
+          "detection_id": 5,
+          "class_id": 9,
+          "class_name": "front_door",
+          "confidence": 0.5753,
+          "box_xyxy": [
+            123.02,
+            380.84,
+            403.32,
+            500.47
+          ],
+          "polygon_points_count": 201
+        },
+        {
+          "detection_id": 6,
+          "class_id": 1,
+          "class_name": "back_door",
+          "confidence": 0.4646,
+          "box_xyxy": [
+            120.28,
+            379.55,
+            404.86,
+            500.69
+          ],
+          "polygon_points_count": 209
+        },
+        {
+          "detection_id": 7,
+          "class_id": 1,
+          "class_name": "back_door",
+          "confidence": 0.3292,
+          "box_xyxy": [
+            117.33,
+            465.81,
+            386.07,
+            595.18
+          ],
+          "polygon_points_count": 257
+        }
+      ]
+    },
+    {
+      "image_filename": "train60_jpg.rf.f938226478793bc550cbb0c624716022.jpg",
+      "saved_prediction": "train60_jpg.rf.f938226478793bc550cbb0c624716022_pred.jpg",
+      "detected_parts_count": 5,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.9657,
+          "box_xyxy": [
+            30.7,
+            199.8,
+            544.67,
+            588.41
+          ],
+          "polygon_points_count": 676
+        },
+        {
+          "detection_id": 2,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.9466,
+          "box_xyxy": [
+            123.13,
+            86.97,
+            537.14,
+            266.24
+          ],
+          "polygon_points_count": 400
+        },
+        {
+          "detection_id": 3,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.9236,
+          "box_xyxy": [
+            174.79,
+            0.19,
+            512.69,
+            146.66
+          ],
+          "polygon_points_count": 267
+        },
+        {
+          "detection_id": 4,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.853,
+          "box_xyxy": [
+            76.2,
+            156.3,
+            136.06,
+            286.31
+          ],
+          "polygon_points_count": 101
+        },
+        {
+          "detection_id": 5,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.6848,
+          "box_xyxy": [
+            473.31,
+            229.87,
+            551.82,
+            352.46
+          ],
+          "polygon_points_count": 144
+        }
+      ]
+    },
+    {
+      "image_filename": "train165_jpg.rf.b01bb66b7491d4204445b725d9287394.jpg",
+      "saved_prediction": "train165_jpg.rf.b01bb66b7491d4204445b725d9287394_pred.jpg",
+      "detected_parts_count": 5,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.921,
+          "box_xyxy": [
+            64.66,
+            130.5,
+            358.55,
+            557.55
+          ],
+          "polygon_points_count": 557
+        },
+        {
+          "detection_id": 2,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.9134,
+          "box_xyxy": [
+            309.55,
+            144.19,
+            439.52,
+            489.07
+          ],
+          "polygon_points_count": 350
+        },
+        {
+          "detection_id": 3,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.8502,
+          "box_xyxy": [
+            378.18,
+            146.7,
+            563.15,
+            457.87
+          ],
+          "polygon_points_count": 329
+        },
+        {
+          "detection_id": 4,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.7826,
+          "box_xyxy": [
+            241.91,
+            125.42,
+            321.07,
+            205.06
+          ],
+          "polygon_points_count": 80
+        },
+        {
+          "detection_id": 5,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.6712,
+          "box_xyxy": [
+            297.35,
+            461.43,
+            387.5,
+            519.28
+          ],
+          "polygon_points_count": 103
+        }
+      ]
+    },
+    {
+      "image_filename": "train173_jpg.rf.91a12f502bb2122957caeb84144555b4.jpg",
+      "saved_prediction": "train173_jpg.rf.91a12f502bb2122957caeb84144555b4_pred.jpg",
+      "detected_parts_count": 4,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.9354,
+          "box_xyxy": [
+            296.46,
+            112.34,
+            416.21,
+            213.26
+          ],
+          "polygon_points_count": 155
+        },
+        {
+          "detection_id": 2,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.8192,
+          "box_xyxy": [
+            337.89,
+            203.15,
+            504.48,
+            264.76
+          ],
+          "polygon_points_count": 136
+        },
+        {
+          "detection_id": 3,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.6413,
+          "box_xyxy": [
+            397.42,
+            264.83,
+            456.98,
+            322.22
+          ],
+          "polygon_points_count": 66
+        },
+        {
+          "detection_id": 4,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.5984,
+          "box_xyxy": [
+            379.89,
+            263.45,
+            517.2,
+            481.6
+          ],
+          "polygon_points_count": 179
+        }
+      ]
+    },
+    {
+      "image_filename": "train251_jpg.rf.3548735669cd5d3fe93135e9190c50ac.jpg",
+      "saved_prediction": "train251_jpg.rf.3548735669cd5d3fe93135e9190c50ac_pred.jpg",
+      "detected_parts_count": 4,
+      "detections": [
+        {
+          "detection_id": 1,
+          "class_id": 10,
+          "class_name": "front_glass",
+          "confidence": 0.9657,
+          "box_xyxy": [
+            387.41,
+            178.81,
+            568.07,
+            494.4
+          ],
+          "polygon_points_count": 417
+        },
+        {
+          "detection_id": 2,
+          "class_id": 8,
+          "class_name": "front_bumper",
+          "confidence": 0.9595,
+          "box_xyxy": [
+            60.75,
+            3.47,
+            425.26,
+            361.5
+          ],
+          "polygon_points_count": 689
+        },
+        {
+          "detection_id": 3,
+          "class_id": 13,
+          "class_name": "front_light",
+          "confidence": 0.9274,
+          "box_xyxy": [
+            250.32,
+            235.08,
+            327.62,
+            372.67
+          ],
+          "polygon_points_count": 112
+        },
+        {
+          "detection_id": 4,
+          "class_id": 16,
+          "class_name": "hood",
+          "confidence": 0.8673,
+          "box_xyxy": [
+            321.36,
+            81.41,
+            479.65,
+            403.46
+          ],
+          "polygon_points_count": 472
+        }
+      ]
+    }
+  ]
+}
