@@ -2,6 +2,8 @@
 .venv/
 env/
 venv/
+.cache/
+.hf_cache/
 
 # Byte-compiled / optimized files
 __pycache__/
@@ -19,6 +21,7 @@ __pycache__/
 # Dataset raw archives and processed images (reproducible via scripts/download_dataset.py)
 data/raw/*.zip
 data/processed/
+data/external/
 
 # Model Checkpoints (large binary weights)
 models/*.pt
