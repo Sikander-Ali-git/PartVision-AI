@@ -1,0 +1,54 @@
+======================================================================
+PartVision AI — Carparts-V2 Dataset Validation Report
+Taxonomy: 13 Unified Automotive Classes (Class 18 'object' Removed)
+======================================================================
+
+1. DATASET OVERVIEW & V2 CLASSES
+Dataset location: /Volumes/Toshiba 1TB/PartVision/data/processed/carparts-v2
+Number of classes: 13 (IDs 0 to 12)
+Classes:
+  [ 0] back_bumper
+  [ 1] back_door
+  [ 2] back_glass
+  [ 3] back_light
+  [ 4] front_bumper
+  [ 5] front_door
+  [ 6] front_glass
+  [ 7] front_light
+  [ 8] hood
+  [ 9] mirror
+  [10] tailgate
+  [11] trunk
+  [12] wheel
+
+2. SPLIT BREAKDOWN
+Split      Images     Labels     Empty      Missing    Orphan     Annotations 
+------------------------------------------------------------------------
+train      3156       3156       126        0          0          16723       
+val        401        401        13         0          0          2041        
+test       276        276        8          0          0          1598        
+------------------------------------------------------------------------
+Total      3833       3833       147        0          0          20362       
+
+3. INTEGRITY & QUALITY CHECKS
+Corrupt Images: 0
+Malformed Annotation Lines: 0
+Invalid Class IDs (outside [0, 12]): 0
+Empty Annotation Files: 147
+Missing Label Files: 0
+Orphan Label Files: 0
+Image Bit-Identity Check (V1 vs V2): PASSED (300/300 sampled images identical)
+
+4. IMAGE DIMENSIONS
+Split 'train' image dimensions:
+  640x640: 3156 images (100.0%)
+Split 'val' image dimensions:
+  640x640: 401 images (100.0%)
+Split 'test' image dimensions:
+  640x640: 276 images (100.0%)
+
+5. ANNOTATION FORMAT & CLASS ID VALIDATION
+Format: YOLO Polygon Segmentation (<class_id> <x1> <y1> <x2> <y2> ... <xn> <yn>)
+Class IDs: Verified strictly in range [0, 12]
+Status: PASSED
+

@@ -1,0 +1,23 @@
+v2_class_id,v2_class_name,mapped_from_v1_classes,v1_annotation_count,v2_annotation_count,v2_percentage_of_total,change_description
+0,back_bumper,[0] back_bumper,870,870,4.27%,Direct 1:1 mapping from [0] back_bumper
+1,back_door,[1] back_door + [3] back_left_door + [6] back_right_door,1731,1731,8.50%,"Merged 3 sided classes: [1] back_door, [3] back_left_door, [6] back_right_door"
+2,back_glass,[2] back_glass,1058,1058,5.20%,Direct 1:1 mapping from [2] back_glass
+3,back_light,[4] back_left_light + [5] back_light + [7] back_right_light,2434,2434,11.95%,"Merged 3 sided classes: [4] back_left_light, [5] back_light, [7] back_right_light"
+4,front_bumper,[8] front_bumper,1978,1978,9.71%,Direct 1:1 mapping from [8] front_bumper
+5,front_door,[9] front_door + [11] front_left_door + [14] front_right_door,1936,1936,9.51%,"Merged 3 sided classes: [9] front_door, [11] front_left_door, [14] front_right_door"
+6,front_glass,[10] front_glass,2062,2062,10.13%,Direct 1:1 mapping from [10] front_glass
+7,front_light,[12] front_left_light + [13] front_light + [15] front_right_light,4066,4066,19.97%,"Merged 3 sided classes: [12] front_left_light, [13] front_light, [15] front_right_light"
+8,hood,[16] hood,2080,2080,10.22%,Direct 1:1 mapping from [16] hood
+9,mirror,[17] left_mirror + [19] right_mirror,996,996,4.89%,"Merged 2 sided classes: [17] left_mirror, [19] right_mirror"
+10,tailgate,[20] tailgate,101,101,0.50%,Direct 1:1 mapping from [20] tailgate
+11,trunk,[21] trunk,173,173,0.85%,Direct 1:1 mapping from [21] trunk
+12,wheel,[22] wheel,877,877,4.31%,Direct 1:1 mapping from [22] wheel
+N/A,[REMOVED] object,[18] object,12,0,0.00%,Removed class 18 'object' entirely from taxonomy
+
+METRIC,V1 VALUE,V2 VALUE,DIFFERENCE,NOTES
+Total Images,3833,3833,0,100% image preservation
+Total Label Files,3833,3833,0,100% label file pairing
+Total Annotations,20374,20362,-12,-12 annotations due to removed 'object'
+Removed 'object' Annotations,N/A,12,+12,"10 train, 1 val, 1 test"
+Empty Label Files,135,147,12,12 images became empty after removing 'object'
+Number of Classes,23,13,-10,Consolidated from 23 to 13 classes
