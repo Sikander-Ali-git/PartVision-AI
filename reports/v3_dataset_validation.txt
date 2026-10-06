@@ -1,0 +1,59 @@
+=================================================================
+PARTVISION AI - V3 DATASET VALIDATION REPORT
+=================================================================
+
+Total Images:                4,831
+Total Annotations:           35,759
+Number of Classes:           19
+Empty Annotation Images:     147
+Multi-Class Images:          4,662
+Malformed Annotations:       0
+Invalid Coordinates:         0
+Orphan Image Files:          0
+Orphan Label Files:          0
+
+--- Image Resolution Metrics ---
+Min Dimensions:              562 x 280
+Max Dimensions:              916 x 684
+Average Dimensions:          657.4 x 612.5
+
+--- Images by Source Dataset ---
+  Carparts-V2              : 3,833 images (79.34%)
+  Humans in the Loop       :   998 images (20.66%)
+
+--- Images by Split ---
+  train     : 3,954 images (81.85%)
+  val       :   501 images (10.37%)
+  test      :   376 images ( 7.78%)
+
+--- Annotations by Source Dataset ---
+  Carparts-V2              : 20,362 annotations (56.94%)
+  Humans in the Loop       : 15,397 annotations (43.06%)
+
+--- Annotations by Split ---
+  train     : 29,005 annotations (81.11%)
+  val       : 3,573 annotations ( 9.99%)
+  test      : 3,181 annotations ( 8.90%)
+
+--- Annotations by Class ---
+ID  Class Name       Train    Val      Test     Total    % Total 
+-----------------------------------------------------------------
+0   back_bumper      1088     136      89       1313     3.67   %
+1   back_door        1967     261      224      2452     6.86   %
+2   back_glass       2100     260      206      2566     7.18   %
+3   back_light       2625     327      203      3155     8.82   %
+4   fender           743      95       97       935      2.61   %
+5   front_bumper     2175     281      227      2683     7.50   %
+6   front_door       2312     287      254      2853     7.98   %
+7   front_glass      2183     280      231      2694     7.53   %
+8   front_light      4049     520      411      4980     13.93  %
+9   grille           458      61       58       577      1.61   %
+10  hood             2269     287      236      2792     7.81   %
+11  mirror           1607     162      214      1983     5.55   %
+12  quarter_panel    688      82       85       855      2.39   %
+13  rocker_panel     682      85       93       860      2.40   %
+14  roof             633      77       83       793      2.22   %
+15  side_window      758      88       105      951      2.66   %
+16  tailgate         88       5        8        101      0.28   %
+17  trunk            479      49       61       589      1.65   %
+18  wheel            2101     230      296      2627     7.35   %
