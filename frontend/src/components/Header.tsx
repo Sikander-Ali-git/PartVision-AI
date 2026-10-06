@@ -4,25 +4,18 @@
  */
 
 import React, { useState } from 'react';
-import { HealthStatus } from '../types/api';
 import { List, X } from '@phosphor-icons/react';
 
 interface HeaderProps {
   activeTab: 'analyze' | 'parts' | 'vehicles' | 'about';
   onSelectTab: (tab: 'analyze' | 'parts' | 'vehicles' | 'about') => void;
-  health: HealthStatus | null;
-  healthLoading: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onSelectTab,
-  health,
-  healthLoading,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const isOnline = health?.status === 'healthy';
 
   const navItems: { id: 'analyze' | 'parts' | 'vehicles' | 'about'; label: string }[] = [
     { id: 'analyze', label: 'Analyze' },
@@ -81,41 +74,8 @@ export const Header: React.FC<HeaderProps> = ({
             </nav>
           </div>
 
-          {/* Right: API Status & Mobile Toggle */}
-          <div className="flex items-center gap-4">
-            {/* API Status Badge */}
-            <div
-              className={`flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                healthLoading
-                  ? 'bg-sand-100 text-sand-500 border-sand-200'
-                  : isOnline
-                  ? 'bg-auto-green-50 text-auto-green-600 border-auto-green-100'
-                  : 'bg-auto-rose-50 text-auto-rose-600 border-auto-rose-100'
-              }`}
-              title={
-                healthLoading
-                  ? 'Checking API connectivity...'
-                  : isOnline
-                  ? `API online (${health?.version}) · Model loaded`
-                  : 'API unavailable'
-              }
-              role="status"
-            >
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  healthLoading
-                    ? 'bg-sand-400 animate-pulse'
-                    : isOnline
-                    ? 'bg-auto-green-500'
-                    : 'bg-auto-rose-500'
-                }`}
-                aria-hidden="true"
-              />
-              <span className="hidden xs:inline">
-                {healthLoading ? 'Checking...' : isOnline ? 'API online' : 'API unavailable'}
-              </span>
-            </div>
-
+          {/* Right: Mobile Toggle */}
+          <div className="flex items-center">
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

@@ -21,16 +21,14 @@ describe('App & Component Tests', () => {
     } as Response);
   });
 
-  it('renders application header and default Analyze tab', async () => {
+  it('renders application header and default Analyze tab', () => {
     render(<App />);
     expect(screen.getAllByText(/PARTVISION/i)[0]).toBeInTheDocument();
     expect(screen.getByText(/Identify an automotive part/i)).toBeInTheDocument();
-    expect(await screen.findByText(/API online/i)).toBeInTheDocument();
   });
 
-  it('navigates between Analyze, Parts, Vehicles, and About tabs', async () => {
+  it('navigates between Analyze, Parts, Vehicles, and About tabs', () => {
     render(<App />);
-    expect(await screen.findByText(/API online/i)).toBeInTheDocument();
 
     // Click Parts tab
     const partsTabBtn = screen.getByRole('button', { name: /^Parts$/i });

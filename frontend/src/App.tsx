@@ -10,11 +10,9 @@ import { AnalyzePage } from './pages/AnalyzePage';
 import { PartsPage } from './pages/PartsPage';
 import { VehiclesPage } from './pages/VehiclesPage';
 import { AboutPage } from './pages/AboutPage';
-import { useApiHealth } from './hooks/useApiHealth';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'analyze' | 'parts' | 'vehicles' | 'about'>('analyze');
-  const { health, isLoading } = useApiHealth();
 
   return (
     <div className="min-h-screen flex flex-col bg-sand-50 text-sand-900 font-sans">
@@ -22,8 +20,6 @@ export const App: React.FC = () => {
       <Header
         activeTab={activeTab}
         onSelectTab={setActiveTab}
-        health={health}
-        healthLoading={isLoading}
       />
 
       {/* Main Workspace Area */}
