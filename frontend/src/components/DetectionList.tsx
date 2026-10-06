@@ -1,17 +1,16 @@
 /**
  * frontend/src/components/DetectionList.tsx
- * Lists all detected physical part instances with confidence scores and selection triggers.
+ * Clean, technical list of detected automotive parts.
+ * Features compact rows, distinct duplicate handling, and clear selection states.
  */
 
 import React from 'react';
 import { Detection } from '../types/api';
-import { getPartColor } from '../utils/colors';
-import { CheckCircle, ShieldCheck } from '@phosphor-icons/react';
+import { CheckCircle } from '@phosphor-icons/react';
 
 interface DetectionListProps {
   detections: Detection[];
   selectedIndex: number | null;
-  hoveredIndex: number | null;
   onSelectDetection: (index: number) => void;
   onHoverDetection: (index: number | null) => void;
 }
@@ -19,84 +18,100 @@ interface DetectionListProps {
 export const DetectionList: React.FC<DetectionListProps> = ({
   detections,
   selectedIndex,
-  hoveredIndex,
   onSelectDetection,
   onHoverDetection,
 }) => {
+  if (detections.length === 0) {
+    return (
+      <div className="p-4 bg-sand-50 rounded-lg border border-sand-200 text-center text-xs text-sand-500">
+        No components detected in this image.
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-graphite-900 border border-graphite-800 rounded-2xl p-4 shadow-lg flex flex-col">
-      <div className="flex items-center justify-between pb-3 mb-3 border-b border-graphite-800">
+    <div className="bg-white border border-sand-200 rounded-xl overflow-hidden shadow-card">
+      <div className="px-4 py-3 border-b border-sand-200 bg-sand-50 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-white">Detected Parts</h3>
-          <p className="text-xs text-graphite-400">
-            {detections.length} individual instances identified
+          <h3 className="text-sm font-semibold text-sand-900">
+            Detected Components ({detections.length})
+          </h3>
+          <p className="text-[11px] text-sand-500">
+            Select a row to focus on image and view verified vehicular compatibility
           </p>
         </div>
-        <span className="text-xs font-mono text-cyan-400 bg-cyan-950/40 border border-cyan-800 px-2 py-0.5 rounded">
-          Conf: 25%–100%
-        </span>
       </div>
 
-      <div className="space-y-2 overflow-y-auto max-h-[380px] pr-1">
-        {detections.map((det, idx) => {
-          const color = getPartColor(det.part_name);
-          const isSelected = selectedIndex === idx;
-          const isHovered = hoveredIndex === idx;
-          const pct = (det.confidence * 100).toFixed(1);
-          const verifiedCount = det.compatibility.verified_vehicles.length;
+      <div className="divide-y divide-sand-200 max-h-72 overflow-y-auto" role="listbox" aria-label="Detected parts list">
+        {detections.map((det, index) => {
+          const isSelected = selectedIndex === index;
+          const hasVerified =
+            det.compatibility &&
+            det.compatibility.verified_vehicles &&
+            det.compatibility.verified_vehicles.length > 0;
+
+          const verifiedCount = det.compatibility?.verified_vehicles?.length || 0;
 
           return (
-            <div
-              key={`card-${idx}-${det.part_name}`}
-              onClick={() => onSelectDetection(idx)}
-              onMouseEnter={() => onHoverDetection(idx)}
+            <button
+              key={`det-item-${index}`}
+              type="button"
+              onClick={() => onSelectDetection(index)}
+              onMouseEnter={() => onHoverDetection(index)}
               onMouseLeave={() => onHoverDetection(null)}
-              className={`p-3 rounded-xl border cursor-pointer transition-all ${
+              className={`w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 transition-colors ${
                 isSelected
-                  ? 'bg-graphite-850 border-cyan-400 shadow-glow-cyan/30'
-                  : isHovered
-                  ? 'bg-graphite-850 border-graphite-700'
-                  : 'bg-graphite-950/70 border-graphite-800 hover:border-graphite-700'
+                  ? 'bg-auto-red-50 text-sand-900 border-l-4 border-auto-red-500'
+                  : 'hover:bg-sand-50 text-sand-800'
               }`}
+              role="option"
+              aria-selected={isSelected}
             >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: color.hex }}
-                  />
-                  <div>
-                    <h4 className="text-sm font-semibold text-white leading-tight">
-                      {det.display_name}
-                    </h4>
-                    <span className="text-xs text-graphite-400 font-mono">
-                      #{idx + 1} • {det.part_name}
-                    </span>
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                <span className="text-xs font-mono text-sand-400 w-4 text-right flex-shrink-0">
+                  {index + 1}
+                </span>
+
+                <div className="truncate">
+                  <div className="text-sm font-medium text-sand-900 truncate">
+                    {det.display_name}
+                  </div>
+                  <div className="text-[11px] font-mono text-sand-500">
+                    {det.part_name}
                   </div>
                 </div>
+              </div>
 
-                {/* Detection Confidence Badge */}
-                <div className="text-right">
-                  <span className="inline-block px-2 py-0.5 rounded bg-graphite-800 border border-graphite-700 text-cyan-400 font-mono text-xs font-medium">
-                    {pct}%
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {/* Fitment Indicator Badge */}
+                {hasVerified ? (
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-auto-green-50 text-auto-green-600 border border-auto-green-100 text-[11px] font-medium"
+                    title={`${verifiedCount} verified OEM vehicle fitments`}
+                  >
+                    <CheckCircle size={12} weight="bold" />
+                    <span>{verifiedCount} Verified</span>
                   </span>
-                  <p className="text-[10px] text-graphite-500 mt-0.5">Detection Conf.</p>
+                ) : (
+                  <span className="text-[11px] text-sand-400">
+                    No fitment
+                  </span>
+                )}
+
+                {/* Model Confidence Score */}
+                <div className="text-right min-w-[50px]">
+                  <div
+                    className="text-xs font-mono font-semibold text-sand-900"
+                    title="Model detection confidence"
+                  >
+                    {(det.confidence * 100).toFixed(1)}%
+                  </div>
+                  <div className="text-[10px] text-sand-500">
+                    Confidence
+                  </div>
                 </div>
               </div>
-
-              {/* Fitment Status Preview */}
-              <div className="mt-2.5 pt-2 border-t border-graphite-800/80 flex items-center justify-between text-xs text-graphite-400">
-                <span className="flex items-center gap-1">
-                  <CheckCircle size={13} className="text-emerald-400" />
-                  <span>Detected</span>
-                </span>
-
-                <span className="flex items-center gap-1 font-mono text-graphite-300">
-                  <ShieldCheck size={13} className="text-cyan-400" />
-                  <span>{verifiedCount} Verified Fitment{verifiedCount === 1 ? '' : 's'}</span>
-                </span>
-              </div>
-            </div>
+            </button>
           );
         })}
       </div>

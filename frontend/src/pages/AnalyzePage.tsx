@@ -1,6 +1,7 @@
 /**
  * frontend/src/pages/AnalyzePage.tsx
- * Primary automotive image analysis workspace with visual segmentation and compatibility panels.
+ * Primary automotive part identification and compatibility analysis workspace.
+ * Follows the core workflow: Upload -> Analyze -> See Detections -> Select Part -> Inspect Verified Fitment.
  */
 
 import React from 'react';
@@ -9,8 +10,7 @@ import { ImageUploader } from '../components/ImageUploader';
 import { DetectionViewer } from '../components/DetectionViewer';
 import { DetectionList } from '../components/DetectionList';
 import { CompatibilityPanel } from '../components/CompatibilityPanel';
-import { SummaryPanel } from '../components/SummaryPanel';
-import { ShieldCheck, Car } from '@phosphor-icons/react';
+import { ArrowClockwise, CheckCircle } from '@phosphor-icons/react';
 
 export const AnalyzePage: React.FC = () => {
   const {
@@ -29,43 +29,32 @@ export const AnalyzePage: React.FC = () => {
   } = useAnalysis();
 
   const selectedDetection =
-    result && selectedDetectionIndex !== null
-      ? result.detections[selectedDetectionIndex] || null
-      : null;
+    result && selectedDetectionIndex !== null ? result.detections[selectedDetectionIndex] : null;
+
+  // Compute distinct part types and verified count
+  const detectionCount = result?.detections.length || 0;
+  const uniquePartTypes = result?.summary.detected_parts.length || 0;
+  const verifiedFitmentAvailable =
+    result?.detections.some(
+      (d) => d.compatibility.verified_vehicles && d.compatibility.verified_vehicles.length > 0
+    ) || false;
 
   return (
     <div className="space-y-6">
-      {/* Top Banner / Heading */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2 border-b border-graphite-850">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-            <span>Automotive Vision Intelligence</span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 font-mono font-medium">
-              V3 Model
-            </span>
-          </h1>
-          <p className="text-xs sm:text-sm text-graphite-400 mt-1">
-            Segment 19 exterior body parts and query verified vehicular compatibility.
-          </p>
-        </div>
-
-        {result && (
-          <div className="flex items-center gap-2 text-xs font-mono text-graphite-400">
-            <span>Req ID:</span>
-            <span className="text-cyan-400 bg-graphite-900 border border-graphite-800 px-2 py-1 rounded truncate max-w-[140px] sm:max-w-[200px]">
-              {result.request_id}
-            </span>
+      {/* State 1: No Analysis Result Yet (Upload / Initial State) */}
+      {!result ? (
+        <div className="max-w-2xl mx-auto py-6 sm:py-10 space-y-8">
+          {/* Focused Page Heading */}
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-sand-900 tracking-tight">
+              Identify an automotive part
+            </h1>
+            <p className="text-sm text-sand-500 max-w-lg mx-auto">
+              Upload a vehicle image to identify visible components and check verified fitment.
+            </p>
           </div>
-        )}
-      </div>
 
-      {/* Summary KPI Panel (When Results Available) */}
-      {result && <SummaryPanel result={result} />}
-
-      {/* Main Analysis Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column (Upload & Detection Canvas) */}
-        <div className="lg:col-span-7 space-y-6">
+          {/* Primary Upload Target */}
           <ImageUploader
             selectedFile={selectedFile}
             previewUrl={previewUrl}
@@ -75,94 +64,80 @@ export const AnalyzePage: React.FC = () => {
             onClear={clearSelection}
             onAnalyze={runAnalysis}
           />
+        </div>
+      ) : (
+        /* State 2: Active Analysis Workspace (Two-Column Layout) */
+        <div className="space-y-4">
+          {/* Workspace Action & Summary Header */}
+          <div className="bg-white border border-sand-200 rounded-xl px-5 py-3.5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-sand-900">
+                  Analysis Results
+                </h2>
+                <span className="text-xs font-mono text-sand-500">
+                  · {result.inference.latency_ms.toFixed(0)} ms
+                </span>
+              </div>
 
-          {/* Interactive Segmentation Viewer */}
-          {result && previewUrl && (
-            <DetectionViewer
-              imageUrl={previewUrl}
-              imageWidth={result.image.width}
-              imageHeight={result.image.height}
-              detections={result.detections}
-              selectedIndex={selectedDetectionIndex}
-              hoveredIndex={hoveredDetectionIndex}
-              onSelectDetection={setSelectedDetectionIndex}
-              onHoverDetection={setHoveredDetectionIndex}
-            />
-          )}
-
-          {/* Static Preview when file selected but not analyzed yet */}
-          {!result && previewUrl && (
-            <div className="bg-graphite-900 border border-graphite-800 rounded-2xl p-4 shadow-lg text-center">
-              <h3 className="text-xs font-semibold text-graphite-400 uppercase tracking-wider mb-2 font-mono">
-                Image Preview
-              </h3>
-              <div className="rounded-xl overflow-hidden bg-graphite-950 border border-graphite-800 flex items-center justify-center max-h-[500px]">
-                <img
-                  src={previewUrl}
-                  alt="Selected vehicle"
-                  className="max-h-[500px] w-auto object-contain"
-                />
+              {/* Compact Technical Summary */}
+              <div className="flex flex-wrap items-center gap-2 text-xs text-sand-600 mt-1 font-mono">
+                <span>{detectionCount} detections</span>
+                <span>·</span>
+                <span>{uniquePartTypes} unique part types</span>
+                {verifiedFitmentAvailable && (
+                  <>
+                    <span>·</span>
+                    <span className="text-auto-green-600 font-medium inline-flex items-center gap-1">
+                      <CheckCircle size={13} weight="bold" />
+                      Verified fitment available
+                    </span>
+                  </>
+                )}
               </div>
             </div>
-          )}
-        </div>
 
-        {/* Right Column (Detection List & Compatibility Panel) */}
-        <div className="lg:col-span-5 space-y-6">
-          {result ? (
-            <>
-              {/* Detection Cards List */}
-              <DetectionList
+            {/* Action to Analyze Another Image */}
+            <button
+              type="button"
+              onClick={clearSelection}
+              className="px-3.5 py-1.5 text-xs font-medium text-sand-700 bg-white border border-sand-300 hover:bg-sand-50 rounded-lg shadow-subtle transition-colors flex items-center justify-center gap-1.5 self-start sm:self-center"
+            >
+              <ArrowClockwise size={14} />
+              <span>Analyze another image</span>
+            </button>
+          </div>
+
+          {/* Dual-Column Analysis Workspace */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* LEFT COLUMN: Large Image Viewer (Receives Largest Visual Priority) */}
+            <div className="lg:col-span-7 xl:col-span-8">
+              <DetectionViewer
+                imageUrl={previewUrl || ''}
+                imageWidth={result.image.width}
+                imageHeight={result.image.height}
                 detections={result.detections}
                 selectedIndex={selectedDetectionIndex}
                 hoveredIndex={hoveredDetectionIndex}
                 onSelectDetection={setSelectedDetectionIndex}
                 onHoverDetection={setHoveredDetectionIndex}
               />
-
-              {/* Vehicle Compatibility Breakdown */}
-              <CompatibilityPanel detection={selectedDetection} />
-            </>
-          ) : (
-            /* Clean Empty State */
-            <div className="bg-graphite-900 border border-graphite-800 rounded-2xl p-6 sm:p-8 shadow-lg text-center space-y-5">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-cyan-950/30 border border-cyan-800/40 flex items-center justify-center text-cyan-400 shadow-glow-cyan/20">
-                <Car size={32} weight="duotone" />
-              </div>
-
-              <div>
-                <h3 className="text-base font-bold text-white">
-                  Awaiting Vehicle Image
-                </h3>
-                <p className="text-xs text-graphite-400 mt-1 max-w-sm mx-auto leading-relaxed">
-                  Upload an exterior photograph above and click <span className="text-cyan-400 font-semibold">Analyze Parts</span> to identify visible spare parts and check vehicular compatibility.
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-graphite-800/80 text-left space-y-3">
-                <h4 className="text-xs font-semibold text-graphite-300 flex items-center gap-1.5 font-mono">
-                  <ShieldCheck size={14} className="text-cyan-400" />
-                  <span>Authoritative Fitment Pipeline</span>
-                </h4>
-                <ul className="text-xs text-graphite-400 space-y-2">
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 font-bold">•</span>
-                    <span><strong>Computer Vision:</strong> YOLO11n-seg segments bumpers, doors, lights, glass, fenders, wheels, mirrors, and hoods.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 font-bold">•</span>
-                    <span><strong>Relational Database:</strong> SQLite maps canonical parts to verified vehicle catalogs with zero AI hallucination.</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="p-3 bg-graphite-850 rounded-xl border border-graphite-800 text-[11px] text-graphite-400 text-center font-mono">
-                19 Classes • 8 Representative Indian Vehicles • 51 Fitment Records
-              </div>
             </div>
-          )}
+
+            {/* RIGHT COLUMN: Technical Detection List & Selected Part Fitment */}
+            <div className="lg:col-span-5 xl:col-span-4 space-y-4">
+              <DetectionList
+                detections={result.detections}
+                selectedIndex={selectedDetectionIndex}
+                onSelectDetection={setSelectedDetectionIndex}
+                onHoverDetection={setHoveredDetectionIndex}
+              />
+
+              <CompatibilityPanel detection={selectedDetection} />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

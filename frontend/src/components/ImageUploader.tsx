@@ -1,10 +1,10 @@
 /**
  * frontend/src/components/ImageUploader.tsx
- * Drag-and-drop file uploader with validation, preview, and analysis trigger.
+ * Professional automotive image upload and inspection component.
  */
 
-import React, { useRef, useState } from 'react';
-import { UploadSimple, FileImage, X, SpinnerGap, Sparkle, WarningCircle } from '@phosphor-icons/react';
+import React, { useState, useRef } from 'react';
+import { UploadSimple, FileImage, SpinnerGap, ArrowClockwise, WarningCircle } from '@phosphor-icons/react';
 
 interface ImageUploaderProps {
   selectedFile: File | null;
@@ -16,6 +16,9 @@ interface ImageUploaderProps {
   onAnalyze: () => void;
 }
 
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
   selectedFile,
   previewUrl,
@@ -26,6 +29,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onAnalyze,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const formatFileSize = (bytes: number): string => {
@@ -35,54 +39,56 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   };
 
+  const validateAndSelect = (file: File) => {
+    setValidationError(null);
+
+    if (!ALLOWED_TYPES.includes(file.type.toLowerCase())) {
+      setValidationError('Please select a valid image file (JPG, PNG, or WEBP).');
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setValidationError(
+        `Image size (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds the 20 MB maximum limit.`
+      );
+      return;
+    }
+
+    onFileSelected(file);
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragOver(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragOver(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragOver(false);
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      onFileSelected(e.dataTransfer.files[0]);
+      validateAndSelect(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      onFileSelected(e.target.files[0]);
+      validateAndSelect(e.target.files[0]);
     }
   };
 
+  const activeError = validationError || error;
+
   return (
-    <div className="bg-graphite-900 border border-graphite-800 rounded-2xl p-5 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <FileImage size={18} className="text-cyan-400" />
-            <span>Vehicle Image Workspace</span>
-          </h2>
-          <p className="text-xs text-graphite-400">
-            Upload an exterior vehicle photograph (JPEG, PNG, WEBP up to 20MB)
-          </p>
-        </div>
-
-        {selectedFile && !isAnalyzing && (
-          <button
-            onClick={onClear}
-            className="flex items-center gap-1 text-xs text-graphite-400 hover:text-rose-400 px-2 py-1 rounded hover:bg-graphite-850 transition"
-          >
-            <X size={14} />
-            <span>Reset</span>
-          </button>
-        )}
-      </div>
-
+    <div className="bg-white border border-sand-200 rounded-xl p-6 shadow-card">
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
@@ -90,79 +96,125 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         accept="image/jpeg,image/png,image/webp"
         onChange={handleFileChange}
         className="hidden"
+        aria-label="Upload automotive image"
       />
 
-      {/* Upload Zone or Preview */}
+      {/* Upload Box / Drag Target */}
       {!selectedFile ? (
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center cursor-pointer transition-all duration-200 ${
+          className={`border-2 border-dashed rounded-lg p-10 sm:p-14 text-center cursor-pointer transition-colors duration-150 ${
             isDragOver
-              ? 'border-cyan-400 bg-cyan-950/20 shadow-glow-cyan'
-              : 'border-graphite-700 hover:border-graphite-600 bg-graphite-950/50 hover:bg-graphite-850/50'
+              ? 'border-auto-red-500 bg-auto-red-50/50'
+              : 'border-sand-300 hover:border-sand-400 bg-sand-50/50 hover:bg-sand-100/50'
           }`}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              fileInputRef.current?.click();
+            }
+          }}
+          aria-label="Click or drag image to upload"
         >
-          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-graphite-850 border border-graphite-700 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
-            <UploadSimple size={28} weight="duotone" />
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white border border-sand-200 flex items-center justify-center text-sand-600 shadow-subtle">
+            <UploadSimple size={24} />
           </div>
-          <p className="text-sm font-medium text-white mb-1">
-            Drag and drop vehicle photograph here, or <span className="text-cyan-400 underline">browse</span>
+
+          <p className="text-sm font-semibold text-sand-900 mb-1">
+            Drop image here, or <span className="text-auto-red-500 underline">browse files</span>
           </p>
-          <p className="text-xs text-graphite-500">
-            Supports JPEG, PNG, WEBP (Max 20 MB)
+
+          <p className="text-xs text-sand-500">
+            JPG · PNG · WEBP · Maximum 20 MB
           </p>
         </div>
       ) : (
+        /* Selected State with Image Preview & Controls */
         <div className="space-y-4">
-          {previewUrl && (
-            <div className="relative w-full h-40 rounded-xl overflow-hidden border border-graphite-800 bg-graphite-950 flex items-center justify-center">
-              <img src={previewUrl} alt="Upload preview thumbnail" className="h-full w-full object-contain" />
-            </div>
-          )}
+          {/* Large Image Preview Container */}
+          <div className="relative w-full rounded-lg border border-sand-200 bg-sand-100 overflow-hidden flex items-center justify-center max-h-[420px]">
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Selected vehicle preview"
+                className="w-full h-auto max-h-[420px] object-contain"
+              />
+            )}
 
-          {/* File Meta Pill */}
-          <div className="flex items-center justify-between p-3 bg-graphite-850 rounded-xl border border-graphite-800 text-xs">
-            <div className="flex items-center gap-2 overflow-hidden">
-              <FileImage size={18} className="text-cyan-400 flex-shrink-0" />
-              <span className="font-mono text-white truncate max-w-xs">{selectedFile.name}</span>
-              <span className="text-graphite-400 font-mono">({formatFileSize(selectedFile.size)})</span>
-            </div>
-            <span className="text-xs text-cyan-400 font-mono">Ready to Analyze</span>
+            {/* Restrained Loading Indicator Overlay */}
+            {isAnalyzing && (
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] flex flex-col items-center justify-center gap-3">
+                <SpinnerGap size={32} className="animate-spin text-auto-red-500" />
+                <p className="text-sm font-medium text-sand-900">
+                  Analyzing image...
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Action Trigger */}
-          <button
-            onClick={onAnalyze}
-            disabled={isAnalyzing}
-            className={`w-full py-3 px-4 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all ${
-              isAnalyzing
-                ? 'bg-graphite-800 text-graphite-400 cursor-not-allowed border border-graphite-700'
-                : 'bg-gradient-to-r from-cyan-500 to-electric-500 hover:from-cyan-400 hover:to-electric-400 text-graphite-950 font-semibold shadow-glow-cyan/50 hover:shadow-glow-cyan'
-            }`}
-          >
-            {isAnalyzing ? (
-              <>
-                <SpinnerGap size={18} className="animate-spin text-cyan-400" />
-                <span className="text-white">Analyzing vehicle image...</span>
-              </>
-            ) : (
-              <>
-                <Sparkle size={18} weight="fill" />
-                <span>Analyze Parts & Check Fitment</span>
-              </>
-            )}
-          </button>
+          {/* File Metadata Bar */}
+          <div className="flex items-center justify-between py-2 px-3 bg-sand-50 rounded-lg border border-sand-200 text-xs">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <FileImage size={18} className="text-sand-500 flex-shrink-0" />
+              <span className="font-medium text-sand-900 truncate max-w-xs">{selectedFile.name}</span>
+              <span className="text-sand-500">({formatFileSize(selectedFile.size)})</span>
+            </div>
+
+            <button
+              onClick={() => {
+                setValidationError(null);
+                onClear();
+              }}
+              disabled={isAnalyzing}
+              className="text-xs text-sand-600 hover:text-auto-rose-600 disabled:opacity-50 transition-colors"
+            >
+              Remove
+            </button>
+          </div>
+
+          {/* Actions Bar */}
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isAnalyzing}
+              className="px-4 py-2 text-sm font-medium text-sand-700 bg-white border border-sand-300 hover:bg-sand-50 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5"
+            >
+              <ArrowClockwise size={16} />
+              <span>Change image</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onAnalyze}
+              disabled={isAnalyzing}
+              className="px-6 py-2 text-sm font-semibold text-white bg-auto-red-500 hover:bg-auto-red-600 active:bg-auto-red-700 rounded-lg shadow-subtle transition-colors disabled:opacity-50 flex items-center gap-2"
+            >
+              {isAnalyzing ? (
+                <>
+                  <SpinnerGap size={18} className="animate-spin" />
+                  <span>Analyzing image...</span>
+                </>
+              ) : (
+                <span>Analyze image</span>
+              )}
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Error Message Banner */}
-      {error && (
-        <div className="mt-4 p-3 bg-rose-950/30 border border-rose-800/60 rounded-xl flex items-start gap-2.5 text-xs text-rose-300">
-          <WarningCircle size={18} weight="fill" className="text-rose-400 flex-shrink-0 mt-0.5" />
-          <p className="flex-1 leading-relaxed">{error}</p>
+      {/* Validation or API Error Banner */}
+      {activeError && (
+        <div className="mt-4 p-3 bg-auto-rose-50 border border-auto-rose-200 rounded-lg flex items-start gap-2 text-xs text-auto-rose-700">
+          <WarningCircle size={16} className="flex-shrink-0 mt-0.5 text-auto-rose-600" />
+          <div className="flex-1">
+            <p className="font-semibold">{activeError}</p>
+            <p className="text-sand-600 mt-0.5">Please provide a clear automotive exterior image under 20 MB.</p>
+          </div>
         </div>
       )}
     </div>

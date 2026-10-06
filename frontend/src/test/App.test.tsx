@@ -24,29 +24,34 @@ describe('App & Component Tests', () => {
   it('renders application header and default Analyze tab', async () => {
     render(<App />);
     expect(screen.getAllByText(/PARTVISION/i)[0]).toBeInTheDocument();
-    expect(screen.getByText(/Automotive Vision Intelligence/i)).toBeInTheDocument();
-    expect(await screen.findByText(/API Online/i)).toBeInTheDocument();
+    expect(screen.getByText(/Identify an automotive part/i)).toBeInTheDocument();
+    expect(await screen.findByText(/API online/i)).toBeInTheDocument();
   });
 
-  it('navigates between Analyze, Parts Catalog, and About tabs', async () => {
+  it('navigates between Analyze, Parts, Vehicles, and About tabs', async () => {
     render(<App />);
-    expect(await screen.findByText(/API Online/i)).toBeInTheDocument();
+    expect(await screen.findByText(/API online/i)).toBeInTheDocument();
 
-    // Click Parts Catalog tab
-    const partsTabBtn = screen.getByRole('button', { name: /Parts Catalog/i });
+    // Click Parts tab
+    const partsTabBtn = screen.getByRole('button', { name: /^Parts$/i });
     fireEvent.click(partsTabBtn);
-    expect(screen.getByText(/Automotive Spare-Parts Catalog/i)).toBeInTheDocument();
+    expect(screen.getByText(/Browse the automotive components currently supported by PartVision/i)).toBeInTheDocument();
+
+    // Click Vehicles tab
+    const vehiclesTabBtn = screen.getByRole('button', { name: /^Vehicles$/i });
+    fireEvent.click(vehiclesTabBtn);
+    expect(screen.getByText(/Browse supported vehicles and compatible OEM components/i)).toBeInTheDocument();
 
     // Click About tab
-    const aboutTabBtn = screen.getByRole('button', { name: /About/i });
+    const aboutTabBtn = screen.getByRole('button', { name: /^About$/i });
     fireEvent.click(aboutTabBtn);
-    expect(screen.getByText(/PartVision AI Architecture/i)).toBeInTheDocument();
-    expect(screen.getByText(/Strict Decoupling: Vision vs Compatibility/i)).toBeInTheDocument();
+    expect(screen.getByText(/About PartVision/i)).toBeInTheDocument();
+    expect(screen.getByText(/What is PartVision\?/i)).toBeInTheDocument();
 
     // Click back to Analyze
-    const analyzeTabBtn = screen.getByRole('button', { name: /Analyze/i });
+    const analyzeTabBtn = screen.getByRole('button', { name: /^Analyze$/i });
     fireEvent.click(analyzeTabBtn);
-    expect(screen.getByText(/Vehicle Image Workspace/i)).toBeInTheDocument();
+    expect(screen.getByText(/Identify an automotive part/i)).toBeInTheDocument();
   });
 
   it('DetectionList preserves duplicate class instances distinctly', () => {
@@ -73,7 +78,6 @@ describe('App & Component Tests', () => {
       <DetectionList
         detections={mockDetections}
         selectedIndex={0}
-        hoveredIndex={null}
         onSelectDetection={vi.fn()}
         onHoverDetection={vi.fn()}
       />
@@ -84,8 +88,6 @@ describe('App & Component Tests', () => {
     expect(wheelLabels).toHaveLength(2);
     expect(screen.getByText('95.4%')).toBeInTheDocument();
     expect(screen.getByText('93.8%')).toBeInTheDocument();
-    expect(screen.getByText(/#1 • wheel/i)).toBeInTheDocument();
-    expect(screen.getByText(/#2 • wheel/i)).toBeInTheDocument();
   });
 
   it('CompatibilityPanel strictly separates verified and unverified fitment records', () => {
@@ -126,9 +128,14 @@ describe('App & Component Tests', () => {
     render(<CompatibilityPanel detection={mockDetection} />);
 
     expect(screen.getByText(/Front Bumper/i)).toBeInTheDocument();
-    expect(screen.getByText(/Verified Fitment \(OEM Catalogs\)/i)).toBeInTheDocument();
-    expect(screen.getByText(/Maruti Suzuki Swift \(3rd Gen\)/i)).toBeInTheDocument();
-    expect(screen.getByText(/Unverified \/ Demonstration Fitment/i)).toBeInTheDocument();
+    expect(screen.getByText(/Verified Fitment \(1\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/Maruti Suzuki Swift/i)).toBeInTheDocument();
+    expect(screen.getByText(/Unverified \/ Demonstration Fitment \(1\)/i)).toBeInTheDocument();
     expect(screen.getByText(/Aftermarket Universal Lip/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /PartVision identifies the visible part using computer vision. Vehicle compatibility is retrieved from the structured fitment database./i
+      )
+    ).toBeInTheDocument();
   });
 });

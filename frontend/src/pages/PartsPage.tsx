@@ -1,17 +1,13 @@
 /**
  * frontend/src/pages/PartsPage.tsx
- * Catalog browsing page displaying all 19 canonical PartVision V3 taxonomy classes.
+ * Professional automotive spare-parts catalog covering all 19 canonical PartVision classes.
+ * Includes category filtering, search, and deep-dive vehicle fitment detail modal.
  */
 
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { Part, PartDetail } from '../types/api';
-import { getPartColor } from '../utils/colors';
-import {
-  MagnifyingGlass,
-  X,
-  SpinnerGap,
-} from '@phosphor-icons/react';
+import { MagnifyingGlass, X, SpinnerGap, Warning, ShieldCheck } from '@phosphor-icons/react';
 
 const CATEGORIES = [
   'All',
@@ -29,7 +25,7 @@ export const PartsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Selected Part for Detail Modal
+  // Selected Part for Detail View
   const [activePartName, setActivePartName] = useState<string | null>(null);
   const [partDetail, setPartDetail] = useState<PartDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState<boolean>(false);
@@ -54,7 +50,6 @@ export const PartsPage: React.FC = () => {
     fetchParts();
   }, [selectedCategory, searchQuery]);
 
-  // Load Part Details when a part card is clicked
   const handleOpenDetail = async (partName: string) => {
     setActivePartName(partName);
     setLoadingDetail(true);
@@ -77,151 +72,153 @@ export const PartsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="pb-3 border-b border-graphite-850">
-        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-          <span>Automotive Spare-Parts Catalog</span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 font-mono font-medium">
-            19 Classes
-          </span>
+      {/* Page Title & Context */}
+      <div>
+        <h1 className="text-2xl font-bold text-sand-900 tracking-tight">
+          Parts
         </h1>
-        <p className="text-xs sm:text-sm text-graphite-400 mt-1">
-          Explore the canonical PartVision V3 visual taxonomy and vehicle fitment cross-references.
+        <p className="text-sm text-sand-500 mt-1">
+          Browse the automotive components currently supported by PartVision.
         </p>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-graphite-900 border border-graphite-800 p-3 rounded-2xl">
+      <div className="bg-white border border-sand-200 rounded-xl p-4 shadow-card flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition ${
-                selectedCategory === cat
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-400/40 shadow-sm'
-                  : 'text-graphite-400 hover:text-white hover:bg-graphite-850'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          {CATEGORIES.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                  isSelected
+                    ? 'bg-sand-900 text-white font-semibold'
+                    : 'bg-sand-100 text-sand-600 hover:text-sand-900 hover:bg-sand-200'
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
 
         {/* Search Input */}
-        <div className="relative min-w-[220px]">
+        <div className="relative w-full sm:w-64 flex-shrink-0">
           <MagnifyingGlass
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-graphite-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-sand-400"
           />
           <input
             type="text"
-            placeholder="Search parts by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-graphite-950 border border-graphite-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-graphite-500 focus:outline-none focus:border-cyan-400 transition"
+            placeholder="Search parts..."
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-sand-300 bg-sand-50/50 text-sand-900 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-auto-red-500"
           />
         </div>
       </div>
 
-      {/* Loading & Error States */}
-      {loading && (
-        <div className="py-16 text-center text-graphite-400 flex flex-col items-center justify-center gap-2">
-          <SpinnerGap size={24} className="animate-spin text-cyan-400" />
-          <span className="text-xs font-mono">Loading parts taxonomy...</span>
+      {/* Parts Table / List */}
+      {loading ? (
+        <div className="bg-white border border-sand-200 rounded-xl p-12 text-center text-xs text-sand-500 flex flex-col items-center gap-2">
+          <SpinnerGap size={24} className="animate-spin text-sand-400" />
+          <span>Loading catalog...</span>
         </div>
-      )}
-
-      {error && (
-        <div className="p-4 bg-rose-950/20 border border-rose-800 rounded-xl text-xs text-rose-300 text-center">
+      ) : error ? (
+        <div className="bg-auto-rose-50 border border-auto-rose-200 rounded-xl p-4 text-xs text-auto-rose-700">
           {error}
         </div>
-      )}
-
-      {/* Parts Cards Grid */}
-      {!loading && !error && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {parts.map((part) => {
-            const color = getPartColor(part.part_name);
-
-            return (
+      ) : parts.length === 0 ? (
+        <div className="bg-white border border-sand-200 rounded-xl p-12 text-center text-xs text-sand-500">
+          No parts match your search criteria.
+        </div>
+      ) : (
+        <div className="bg-white border border-sand-200 rounded-xl overflow-hidden shadow-card">
+          <div className="divide-y divide-sand-200">
+            {parts.map((p) => (
               <div
-                key={part.id}
-                onClick={() => handleOpenDetail(part.part_name)}
-                className="bg-graphite-900 border border-graphite-800 hover:border-cyan-400/50 rounded-2xl p-4 shadow-sm hover:shadow-glow-cyan/20 cursor-pointer transition-all flex flex-col justify-between group"
+                key={p.part_name}
+                onClick={() => handleOpenDetail(p.part_name)}
+                className="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-sand-50 cursor-pointer transition-colors"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleOpenDetail(p.part_name);
+                  }
+                }}
               >
-                <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      <h3 className="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors">
-                        {part.display_name}
-                      </h3>
-                    </div>
-
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-graphite-850 border border-graphite-800 text-graphite-300">
-                      {part.category}
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-sand-900 text-sm">
+                      {p.display_name}
+                    </span>
+                    <span className="text-[11px] font-mono text-sand-400">
+                      ({p.part_name})
                     </span>
                   </div>
 
-                  <p className="text-xs text-graphite-400 line-clamp-2 leading-relaxed">
-                    {part.description || 'Automotive exterior replacement component.'}
-                  </p>
+                  {p.description && (
+                    <p className="text-xs text-sand-500 line-clamp-1 max-w-2xl">
+                      {p.description}
+                    </p>
+                  )}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-graphite-800/80 flex items-center justify-between text-xs">
-                  <code className="text-[11px] text-cyan-400 font-mono">
-                    {part.part_name}
-                  </code>
-                  <span className="text-[11px] text-graphite-400 group-hover:text-cyan-400 font-medium transition-colors">
-                    View Fitment →
+                <div className="flex items-center gap-3 flex-shrink-0 self-start sm:self-center">
+                  <span className="px-2 py-0.5 rounded bg-sand-100 text-sand-600 text-xs font-mono">
+                    {p.category}
+                  </span>
+
+                  <span className="text-xs text-auto-red-500 hover:text-auto-red-600 font-medium">
+                    View fitment →
                   </span>
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       )}
 
-      {/* PART DETAIL MODAL */}
+      {/* Part Detail Modal */}
       {activePartName && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-graphite-900 border border-graphite-750 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl space-y-5 animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-50 bg-sand-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-sand-200 rounded-2xl max-w-xl w-full p-6 shadow-modal max-h-[90vh] overflow-y-auto space-y-5">
             {/* Modal Header */}
-            <div className="flex items-start justify-between pb-3 border-b border-graphite-800">
+            <div className="flex items-start justify-between border-b border-sand-200 pb-4">
               <div>
-                <span className="text-xs uppercase font-mono text-cyan-400 tracking-wider">
-                  Part Details & Vehicular Compatibility
+                <span className="text-xs font-mono uppercase text-sand-500">
+                  Component Detail
                 </span>
-                <h2 className="text-xl font-bold text-white mt-1">
+                <h2 className="text-lg font-bold text-sand-900 mt-0.5">
                   {partDetail ? partDetail.display_name : activePartName}
                 </h2>
-                <p className="text-xs text-graphite-400 font-mono">
-                  Canonical: <code className="text-cyan-300">{activePartName}</code>
+                <p className="text-xs font-mono text-sand-500">
+                  Canonical: {activePartName}
                 </p>
               </div>
 
               <button
                 onClick={handleCloseDetail}
-                className="p-1.5 rounded-lg text-graphite-400 hover:text-white hover:bg-graphite-800 transition"
+                className="p-1 rounded-md text-sand-400 hover:text-sand-700 hover:bg-sand-100 transition"
+                aria-label="Close part details"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
             {loadingDetail && (
-              <div className="py-12 text-center text-graphite-400 flex flex-col items-center gap-2">
-                <SpinnerGap size={24} className="animate-spin text-cyan-400" />
-                <span className="text-xs font-mono">Fetching compatibility records...</span>
+              <div className="py-10 text-center text-xs text-sand-500 flex flex-col items-center gap-2">
+                <SpinnerGap size={24} className="animate-spin text-auto-red-500" />
+                <span>Loading compatibility records...</span>
               </div>
             )}
 
             {detailError && (
-              <div className="p-3 bg-rose-950/30 border border-rose-800 rounded-xl text-xs text-rose-300">
+              <div className="p-3 bg-auto-rose-50 border border-auto-rose-200 rounded-lg text-xs text-auto-rose-700">
                 {detailError}
               </div>
             )}
@@ -229,31 +226,27 @@ export const PartsPage: React.FC = () => {
             {partDetail && (
               <div className="space-y-4 text-xs">
                 {/* Description & Category */}
-                <div className="bg-graphite-950 p-4 rounded-xl border border-graphite-800 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-graphite-400 font-semibold uppercase text-[10px] tracking-wider font-mono">
-                      Category
-                    </span>
-                    <span className="text-cyan-400 font-mono font-medium">
-                      {partDetail.category}
-                    </span>
+                <div className="p-3.5 bg-sand-50 rounded-lg border border-sand-200 space-y-1">
+                  <div className="flex items-center justify-between text-sand-500">
+                    <span className="font-mono uppercase text-[10px]">Category</span>
+                    <span className="font-medium text-sand-700">{partDetail.category}</span>
                   </div>
-                  <p className="text-graphite-300 leading-relaxed">
-                    {partDetail.description}
+                  <p className="text-sand-700 text-xs mt-1">
+                    {partDetail.description || 'No description provided.'}
                   </p>
                 </div>
 
-                {/* Aliases & Search Synonyms */}
+                {/* Search Synonyms / Aliases */}
                 {partDetail.aliases && partDetail.aliases.length > 0 && (
                   <div>
-                    <h4 className="text-xs font-semibold text-graphite-300 mb-2 font-mono uppercase tracking-wider">
-                      Search Synonyms & Colloquial Aliases
+                    <h4 className="text-[11px] font-semibold text-sand-600 uppercase font-mono mb-1.5">
+                      Known Aliases & Synonyms
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
                       {partDetail.aliases.map((alias) => (
                         <span
                           key={alias}
-                          className="px-2 py-0.5 rounded bg-graphite-850 border border-graphite-750 text-graphite-300 font-mono text-[11px]"
+                          className="px-2 py-0.5 rounded bg-sand-100 text-sand-700 font-mono text-[11px]"
                         >
                           {alias}
                         </span>
@@ -262,47 +255,71 @@ export const PartsPage: React.FC = () => {
                   </div>
                 )}
 
-                {/* Compatibility Matches */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center justify-between border-b border-graphite-800 pb-2">
-                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider font-mono">
-                      Compatible Vehicles ({partDetail.compatibility.total_matches})
+                {/* Compatibility List */}
+                <div className="space-y-2 pt-2 border-t border-sand-200">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-sand-900 flex items-center gap-1.5">
+                      <ShieldCheck size={16} className="text-auto-green-500" />
+                      <span>Verified OEM Compatible Vehicles ({partDetail.compatibility.verified_vehicles.length})</span>
                     </h4>
-                    <span className="text-[11px] text-cyan-400 font-mono">
-                      {partDetail.compatibility.verified_vehicles.length} Verified OEM
-                    </span>
                   </div>
 
-                  {/* Verified List */}
                   {partDetail.compatibility.verified_vehicles.length > 0 ? (
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-h-56 overflow-y-auto">
                       {partDetail.compatibility.verified_vehicles.map((v) => (
                         <div
-                          key={`modal-v-${v.id}`}
-                          className="p-3 bg-graphite-950 rounded-xl border border-emerald-500/20 text-xs space-y-1"
+                          key={`modal-veh-${v.id}`}
+                          className="p-3 bg-sand-50 rounded-lg border border-sand-200 text-xs"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-white">
+                            <span className="font-semibold text-sand-900">
                               {v.make} {v.model} {v.generation ? `(${v.generation})` : ''}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px]">
-                              {v.compatibility_status}
+                            <span className="text-[11px] font-mono text-auto-green-600 font-medium">
+                              Direct Fit
                             </span>
                           </div>
-                          <p className="text-graphite-400 text-[11px] font-mono">
-                            {v.year_start}–{v.year_end || 'Present'} • {v.vehicle_type}
+                          <p className="text-sand-600 text-[11px] mt-0.5 font-mono">
+                            {v.year_start}–{v.year_end || 'Present'} · {v.vehicle_type}
                           </p>
-                          {v.notes && <p className="text-graphite-300 text-[11px]">{v.notes}</p>}
-                          <p className="text-[10px] text-graphite-500">Source: {v.source}</p>
+                          {v.notes && <p className="text-sand-600 text-[11px] mt-1">{v.notes}</p>}
+                          <p className="text-[10px] text-sand-500 mt-1 font-mono">
+                            Source: {v.source}
+                          </p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-graphite-500 text-xs italic">
+                    <p className="text-sand-500 italic py-2">
                       No verified OEM vehicle fitments registered in the current baseline catalog.
                     </p>
                   )}
                 </div>
+
+                {/* Unverified Section */}
+                {partDetail.compatibility.unverified_vehicles.length > 0 && (
+                  <div className="space-y-2 pt-2 border-t border-sand-200">
+                    <h4 className="font-semibold text-auto-amber-700 flex items-center gap-1.5">
+                      <Warning size={14} className="text-auto-amber-600" />
+                      <span>Unverified / Demonstration Records</span>
+                    </h4>
+                    <div className="space-y-1.5">
+                      {partDetail.compatibility.unverified_vehicles.map((v) => (
+                        <div
+                          key={`modal-unver-${v.id}`}
+                          className="p-2.5 bg-auto-amber-50/50 rounded-lg border border-auto-amber-100 text-xs"
+                        >
+                          <span className="font-medium text-sand-900">
+                            {v.make} {v.model}
+                          </span>
+                          <span className="text-sand-500 ml-2">
+                            ({v.year_start}–{v.year_end || 'Present'})
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

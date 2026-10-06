@@ -44,6 +44,33 @@ describe('API Client Service (src/services/api.ts)', () => {
     expect(result[0].part_name).toBe('front_light');
   });
 
+  it('getVehicles fetches vehicles catalog with make filter', async () => {
+    const mockVehicles = [
+      {
+        id: 1,
+        make: 'Hyundai',
+        model: 'Creta',
+        generation: '2nd Gen',
+        year_start: 2020,
+        year_end: 2023,
+        vehicle_type: 'Compact SUV',
+        display_name: 'Hyundai Creta 2nd Gen (2020–2023)',
+      },
+    ];
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockVehicles,
+    } as Response);
+
+    const result = await api.getVehicles('Hyundai');
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://127.0.0.1:8000/api/vehicles?make=Hyundai'
+    );
+    expect(result).toHaveLength(1);
+    expect(result[0].model).toBe('Creta');
+  });
+
   it('analyzeImage posts FormData and returns AnalysisResult', async () => {
     const mockAnalysis = {
       request_id: 'test-uuid-1234',

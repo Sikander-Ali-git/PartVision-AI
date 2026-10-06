@@ -1,108 +1,155 @@
 /**
  * frontend/src/components/Header.tsx
- * Top navigation bar with branding, navigation links, and live API status indicator.
+ * Professional automotive software navigation header.
  */
 
-import React from 'react';
-import { ShieldCheck, Cpu, Car, Info } from '@phosphor-icons/react';
+import React, { useState } from 'react';
+import { HealthStatus } from '../types/api';
+import { List, X } from '@phosphor-icons/react';
 
 interface HeaderProps {
-  currentTab: 'analyze' | 'parts' | 'about';
-  onSelectTab: (tab: 'analyze' | 'parts' | 'about') => void;
-  isApiOnline: boolean;
-  apiChecking: boolean;
+  activeTab: 'analyze' | 'parts' | 'vehicles' | 'about';
+  onSelectTab: (tab: 'analyze' | 'parts' | 'vehicles' | 'about') => void;
+  health: HealthStatus | null;
+  healthLoading: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentTab,
+  activeTab,
   onSelectTab,
-  isApiOnline,
-  apiChecking,
+  health,
+  healthLoading,
 }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const isOnline = health?.status === 'healthy';
+
+  const navItems: { id: 'analyze' | 'parts' | 'vehicles' | 'about'; label: string }[] = [
+    { id: 'analyze', label: 'Analyze' },
+    { id: 'parts', label: 'Parts' },
+    { id: 'vehicles', label: 'Vehicles' },
+    { id: 'about', label: 'About' },
+  ];
+
+  const handleNavClick = (tab: 'analyze' | 'parts' | 'vehicles' | 'about') => {
+    onSelectTab(tab);
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-graphite-950/80 backdrop-blur-md border-b border-graphite-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSelectTab('analyze')}>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400/20 to-electric-500/20 border border-cyan-400/40 flex items-center justify-center shadow-glow-cyan/50">
-            <Cpu size={22} weight="duotone" className="text-cyan-400" />
+    <header className="bg-white border-b border-sand-200 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo & Product Name */}
+          <div className="flex items-center gap-8">
+            <button
+              onClick={() => handleNavClick('analyze')}
+              className="flex items-center gap-2.5 text-left focus:outline-none"
+              aria-label="PartVision Home"
+            >
+              <div className="w-8 h-8 rounded bg-auto-red-500 flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-subtle">
+                PV
+              </div>
+              <div>
+                <span className="font-semibold text-sand-900 tracking-tight text-base font-sans">
+                  PARTVISION
+                </span>
+                <span className="hidden sm:inline-block ml-2 text-xs font-mono text-sand-500 font-normal">
+                  v0.4.0
+                </span>
+              </div>
+            </button>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1" aria-label="Main Navigation">
+              {navItems.map((item) => {
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-sand-100 text-sand-900 font-semibold'
+                        : 'text-sand-500 hover:text-sand-900 hover:bg-sand-50'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-lg tracking-wider text-white">PARTVISION</span>
-              <span className="text-xs px-1.5 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 font-mono font-medium">
-                AI v0.4
+
+          {/* Right: API Status & Mobile Toggle */}
+          <div className="flex items-center gap-4">
+            {/* API Status Badge */}
+            <div
+              className={`flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium border ${
+                healthLoading
+                  ? 'bg-sand-100 text-sand-500 border-sand-200'
+                  : isOnline
+                  ? 'bg-auto-green-50 text-auto-green-600 border-auto-green-100'
+                  : 'bg-auto-rose-50 text-auto-rose-600 border-auto-rose-100'
+              }`}
+              title={
+                healthLoading
+                  ? 'Checking API connectivity...'
+                  : isOnline
+                  ? `API online (${health?.version}) · Model loaded`
+                  : 'API unavailable'
+              }
+              role="status"
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  healthLoading
+                    ? 'bg-sand-400 animate-pulse'
+                    : isOnline
+                    ? 'bg-auto-green-500'
+                    : 'bg-auto-rose-500'
+                }`}
+                aria-hidden="true"
+              />
+              <span className="hidden xs:inline">
+                {healthLoading ? 'Checking...' : isOnline ? 'API online' : 'API unavailable'}
               </span>
             </div>
-            <p className="text-xs text-graphite-400 hidden sm:block">Automotive Spare-Part Intelligence</p>
-          </div>
-        </div>
 
-        {/* Navigation Tabs */}
-        <nav className="flex items-center gap-1 sm:gap-2">
-          <button
-            onClick={() => onSelectTab('analyze')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-              currentTab === 'analyze'
-                ? 'bg-graphite-850 text-cyan-400 border border-cyan-400/30 shadow-sm'
-                : 'text-graphite-400 hover:text-white hover:bg-graphite-900'
-            }`}
-          >
-            <Car size={18} weight={currentTab === 'analyze' ? 'fill' : 'regular'} />
-            <span>Analyze</span>
-          </button>
-
-          <button
-            onClick={() => onSelectTab('parts')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-              currentTab === 'parts'
-                ? 'bg-graphite-850 text-cyan-400 border border-cyan-400/30 shadow-sm'
-                : 'text-graphite-400 hover:text-white hover:bg-graphite-900'
-            }`}
-          >
-            <ShieldCheck size={18} weight={currentTab === 'parts' ? 'fill' : 'regular'} />
-            <span>Parts Catalog</span>
-          </button>
-
-          <button
-            onClick={() => onSelectTab('about')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-              currentTab === 'about'
-                ? 'bg-graphite-850 text-cyan-400 border border-cyan-400/30 shadow-sm'
-                : 'text-graphite-400 hover:text-white hover:bg-graphite-900'
-            }`}
-          >
-            <Info size={18} weight={currentTab === 'about' ? 'fill' : 'regular'} />
-            <span>About</span>
-          </button>
-        </nav>
-
-        {/* Status Badge */}
-        <div className="flex items-center gap-2">
-          <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium border ${
-              isApiOnline
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                : apiChecking
-                ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400'
-                : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-            }`}
-          >
-            <span
-              className={`w-2 h-2 rounded-full ${
-                isApiOnline
-                  ? 'bg-emerald-400 animate-pulse'
-                  : apiChecking
-                  ? 'bg-yellow-400 animate-ping'
-                  : 'bg-rose-500'
-              }`}
-            />
-            <span className="hidden sm:inline">
-              {isApiOnline ? 'API Online' : apiChecking ? 'Connecting...' : 'API Offline'}
-            </span>
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-sand-600 hover:text-sand-900 hover:bg-sand-100 focus:outline-none"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <List size={20} />}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-sand-200 bg-white px-4 pt-2 pb-4 space-y-1 shadow-dropdown">
+          {navItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${
+                  isActive
+                    ? 'bg-sand-100 text-sand-900 font-semibold'
+                    : 'text-sand-600 hover:text-sand-900 hover:bg-sand-50'
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 };

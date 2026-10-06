@@ -1,162 +1,164 @@
 /**
  * frontend/src/pages/AboutPage.tsx
- * Architecture overview, model performance metrics, dataset inventory, and trust disclosures.
+ * Calm, professional system overview and technical specifications.
  */
 
-import React from 'react';
-import {
-  Cpu,
-  Database,
-  ShieldCheck,
-  ChartBar,
-  Lock,
-} from '@phosphor-icons/react';
+import React, { useState } from 'react';
+import { CaretDown, CaretUp, ShieldCheck, Database, Cpu } from '@phosphor-icons/react';
 
 export const AboutPage: React.FC = () => {
+  const [techOpen, setTechOpen] = useState(false);
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Title Banner */}
-      <div className="pb-4 border-b border-graphite-850">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-          <span>PartVision AI Architecture</span>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 font-mono font-medium">
-            System Guide
-          </span>
+    <div className="max-w-3xl mx-auto space-y-8">
+      {/* Title */}
+      <div>
+        <h1 className="text-2xl font-bold text-sand-900 tracking-tight">
+          About PartVision
         </h1>
-        <p className="text-sm text-graphite-400 mt-1">
-          Technical specifications, dataset provenance, model metrics, and architectural trust disclosures.
+        <p className="text-sm text-sand-500 mt-1">
+          Automotive computer-vision diagnostic software for spare-part identification and verified fitment.
         </p>
       </div>
 
-      {/* Core Architectural Principle Banner */}
-      <div className="p-5 bg-gradient-to-br from-graphite-900 to-graphite-950 border border-cyan-400/30 rounded-2xl shadow-lg relative overflow-hidden">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 flex-shrink-0">
-            <ShieldCheck size={26} weight="duotone" />
+      {/* Section 1: What is PartVision? */}
+      <section className="bg-white border border-sand-200 rounded-xl p-6 shadow-card space-y-3">
+        <h2 className="text-base font-bold text-sand-900">
+          What is PartVision?
+        </h2>
+        <p className="text-sm text-sand-600 leading-relaxed">
+          PartVision is a dedicated automotive computer-vision service designed to identify visible exterior vehicle components from standard photographs and immediately look up verified OEM vehicular fitment records.
+        </p>
+      </section>
+
+      {/* Section 2: How It Works */}
+      <section className="bg-white border border-sand-200 rounded-xl p-6 shadow-card space-y-4">
+        <h2 className="text-base font-bold text-sand-900">
+          How It Works
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center text-xs font-mono py-2">
+          <div className="p-3 rounded-lg bg-sand-50 border border-sand-200 text-center font-medium text-sand-900">
+            Image Upload
           </div>
-          <div className="space-y-1">
-            <h2 className="text-base font-bold text-white">
-              Strict Decoupling: Vision vs Compatibility
-            </h2>
-            <p className="text-xs sm:text-sm text-graphite-300 leading-relaxed">
-              PartVision enforces a strict separation of concerns. The deep learning model identifies <em>what</em> physical part is visible in an image, while an authoritative SQLite relational database determines <em>which</em> vehicles fit that part.
-            </p>
-            <div className="pt-2 flex flex-wrap gap-2 text-xs font-mono">
-              <span className="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300">
-                AI = Visual Detection Only
-              </span>
-              <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-300">
-                SQLite = Authoritative Fitment
-              </span>
-              <span className="px-2 py-0.5 rounded bg-graphite-850 border border-graphite-700 text-graphite-300">
-                Zero Generative Hallucination
-              </span>
+          <div className="text-center text-sand-400 hidden sm:block">→</div>
+          <div className="p-3 rounded-lg bg-sand-50 border border-sand-200 text-center font-medium text-sand-900">
+            YOLO11n-seg (V3)
+          </div>
+          <div className="text-center text-sand-400 hidden sm:block">→</div>
+          <div className="p-3 rounded-lg bg-sand-50 border border-sand-200 text-center font-medium text-sand-900">
+            SQLite Database
+          </div>
+        </div>
+
+        <div className="space-y-3 text-sm text-sand-600 pt-2 border-t border-sand-200">
+          <div className="flex items-start gap-2.5">
+            <Cpu size={18} className="text-auto-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-sand-900 font-medium">1. Computer Vision Segmentation:</strong>
+              <p className="text-xs text-sand-500 mt-0.5">
+                The image is processed by the frozen YOLO11n-seg model, detecting visible spare parts, delineating bounding boxes, and extracting polygon segmentation masks.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2.5">
+            <Database size={18} className="text-auto-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-sand-900 font-medium">2. Authoritative Compatibility Lookup:</strong>
+              <p className="text-xs text-sand-500 mt-0.5">
+                Canonical part identifiers are queried directly against a normalized SQLite compatibility database to retrieve verified vehicle makes, models, and generation years.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2.5">
+            <ShieldCheck size={18} className="text-auto-green-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-sand-900 font-medium">3. Architectural Decoupling:</strong>
+              <p className="text-xs text-sand-500 mt-0.5">
+                The AI model never infers or invents vehicle fitment. Computer vision identifies what is visible; the relational database determines compatibility.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Model & Dataset Metrics Grid */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-          <ChartBar size={16} className="text-cyan-400" />
-          <span>V3 Machine Learning & Dataset Metrics</span>
-        </h3>
-        <p className="text-xs text-graphite-400">
-          *Note: Metrics represent offline model training and validation benchmarks on held-out test splits, not runtime client performance.
+      {/* Section 3: Model & Dataset Specifications */}
+      <section className="bg-white border border-sand-200 rounded-xl p-6 shadow-card space-y-4">
+        <h2 className="text-base font-bold text-sand-900">
+          Model & Dataset Metrics
+        </h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="p-3.5 bg-sand-50 rounded-lg border border-sand-200">
+            <div className="text-xl font-bold font-mono text-sand-900">19</div>
+            <div className="text-xs text-sand-500 mt-0.5">Canonical classes</div>
+          </div>
+
+          <div className="p-3.5 bg-sand-50 rounded-lg border border-sand-200">
+            <div className="text-xl font-bold font-mono text-sand-900">4,831</div>
+            <div className="text-xs text-sand-500 mt-0.5">Training images</div>
+          </div>
+
+          <div className="p-3.5 bg-sand-50 rounded-lg border border-sand-200">
+            <div className="text-xl font-bold font-mono text-sand-900">35,759</div>
+            <div className="text-xs text-sand-500 mt-0.5">Polygon instances</div>
+          </div>
+
+          <div className="p-3.5 bg-sand-50 rounded-lg border border-sand-200">
+            <div className="text-xl font-bold font-mono text-auto-green-600">85.70%</div>
+            <div className="text-xs text-sand-500 mt-0.5">Mask mAP50</div>
+          </div>
+        </div>
+
+        <p className="text-xs text-sand-500 italic">
+          Metrics reflect evaluation against the held-out PartVision V3 test split on Apple Silicon (MPS).
         </p>
+      </section>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-          <div className="p-4 bg-graphite-900 border border-graphite-800 rounded-xl">
-            <span className="text-xs text-graphite-400 block font-mono">Architecture</span>
-            <span className="text-lg font-bold text-white font-mono">YOLO11n-seg</span>
-            <span className="text-[11px] text-cyan-400 block mt-0.5">Ultralytics Instance Seg</span>
-          </div>
+      {/* Section 4: Expandable Technical Specifications */}
+      <section className="bg-white border border-sand-200 rounded-xl overflow-hidden shadow-card">
+        <button
+          type="button"
+          onClick={() => setTechOpen(!techOpen)}
+          className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-sand-50 transition-colors"
+        >
+          <span className="text-sm font-semibold text-sand-900">
+            Technical Implementation Details
+          </span>
+          {techOpen ? <CaretUp size={16} /> : <CaretDown size={16} />}
+        </button>
 
-          <div className="p-4 bg-graphite-900 border border-graphite-800 rounded-xl">
-            <span className="text-xs text-graphite-400 block font-mono">Taxonomy</span>
-            <span className="text-lg font-bold text-white font-mono">19 Classes</span>
-            <span className="text-[11px] text-graphite-400 block mt-0.5">Automotive Exterior</span>
+        {techOpen && (
+          <div className="px-6 pb-6 pt-2 border-t border-sand-200 text-xs font-mono space-y-2 text-sand-600">
+            <div className="flex justify-between py-1 border-b border-sand-100">
+              <span className="text-sand-500">Vision Architecture:</span>
+              <span className="text-sand-900">YOLO11n-seg (Frozen V3)</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-sand-100">
+              <span className="text-sand-500">Inference Engine:</span>
+              <span className="text-sand-900">PartVisionInferenceEngine (PyTorch/MPS)</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-sand-100">
+              <span className="text-sand-500">Backend Framework:</span>
+              <span className="text-sand-900">FastAPI 0.115+ (Uvicorn / Pydantic V2)</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-sand-100">
+              <span className="text-sand-500">Database Engine:</span>
+              <span className="text-sand-900">SQLite 3 (WAL Mode, Foreign Key Enforcement)</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-sand-100">
+              <span className="text-sand-500">Client Architecture:</span>
+              <span className="text-sand-900">React 18 + Vite 6 + TypeScript 5</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span className="text-sand-500">API Contract:</span>
+              <span className="text-sand-900">REST (POST /api/analyze, GET /health, GET /api/parts, GET /api/vehicles)</span>
+            </div>
           </div>
-
-          <div className="p-4 bg-graphite-900 border border-graphite-800 rounded-xl">
-            <span className="text-xs text-graphite-400 block font-mono">Training Corpus</span>
-            <span className="text-lg font-bold text-white font-mono">4,831 Images</span>
-            <span className="text-[11px] text-graphite-400 block mt-0.5">35,759 Polygons</span>
-          </div>
-
-          <div className="p-4 bg-graphite-900 border border-graphite-800 rounded-xl">
-            <span className="text-xs text-graphite-400 block font-mono">Mask mAP50</span>
-            <span className="text-lg font-bold text-emerald-400 font-mono">85.70%</span>
-            <span className="text-[11px] text-emerald-500 block mt-0.5">Held-out V3 Val Split</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Multi-Tiered System Architecture */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Computer Vision Card */}
-        <div className="p-5 bg-graphite-900 border border-graphite-800 rounded-2xl space-y-3">
-          <div className="flex items-center gap-2 text-cyan-400 text-sm font-semibold">
-            <Cpu size={20} weight="duotone" />
-            <span>Computer Vision Layer (M6A)</span>
-          </div>
-          <p className="text-xs text-graphite-300 leading-relaxed">
-            Wrapped by a singleton Python inference engine executed via PyTorch and Apple Silicon Metal Performance Shaders (MPS). Generates bounding boxes, pixel-aligned polygon contours, and confidence scores across 19 exterior vehicle classes.
-          </p>
-          <ul className="text-xs text-graphite-400 space-y-1 font-mono">
-            <li>• Checkpoint: partvision_v3_yolo11n_seg_best.pt</li>
-            <li>• Parameters: 2,846,313 (5.71 MB)</li>
-            <li>• Average Inference: ~41 ms per image (M3)</li>
-          </ul>
-        </div>
-
-        {/* Database Fitment Card */}
-        <div className="p-5 bg-graphite-900 border border-graphite-800 rounded-2xl space-y-3">
-          <div className="flex items-center gap-2 text-electric-500 text-sm font-semibold">
-            <Database size={20} weight="duotone" />
-            <span>Relational Compatibility Layer (M6B)</span>
-          </div>
-          <p className="text-xs text-graphite-300 leading-relaxed">
-            Operates on an ACID-compliant SQLite 3 database in Write-Ahead Logging (WAL) mode. Maps canonical parts to high-volume production vehicles with explicit provenance, source attribution, and OEM manual citations.
-          </p>
-          <ul className="text-xs text-graphite-400 space-y-1 font-mono">
-            <li>• Target: data/partvision.db (WAL Mode)</li>
-            <li>• Seeded Vehicles: 8 Indian Market Models</li>
-            <li>• Verified Records: 48 OEM Cross-References</li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Safety & Compliance Guarantees */}
-      <div className="p-5 bg-graphite-900 border border-graphite-800 rounded-2xl space-y-3">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <Lock size={18} className="text-cyan-400" />
-          <span>Product Safety & Technical Constraints</span>
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-graphite-300">
-          <div className="p-3 bg-graphite-950 rounded-xl border border-graphite-850 space-y-1">
-            <span className="font-semibold text-white block">No In-Memory Retention</span>
-            <p className="text-graphite-400 text-[11px]">
-              Uploaded vehicle images are discarded immediately after inference completion.
-            </p>
-          </div>
-
-          <div className="p-3 bg-graphite-950 rounded-xl border border-graphite-850 space-y-1">
-            <span className="font-semibold text-white block">Transparent Provenance</span>
-            <p className="text-graphite-400 text-[11px]">
-              Every fitment match cites manufacturer catalogs (MSGP, Hyundai Mobis, Honda Access).
-            </p>
-          </div>
-
-          <div className="p-3 bg-graphite-950 rounded-xl border border-graphite-850 space-y-1">
-            <span className="font-semibold text-white block">Isolated Verification</span>
-            <p className="text-graphite-400 text-[11px]">
-              Demonstration or aftermarket data is strictly quarantined from verified OEM records.
-            </p>
-          </div>
-        </div>
-      </div>
+        )}
+      </section>
     </div>
   );
 };

@@ -1,111 +1,142 @@
-# PartVision AI — Frontend Developer Documentation
+# PartVision — Professional Automotive Frontend Documentation
 
-## 1. Overview & Architecture
+## 1. Overview & Product Architecture
 
-The **PartVision AI Frontend** is a modern, responsive single-page application built with **React 18**, **TypeScript**, **Vite**, and **Tailwind CSS**. It provides an intuitive, high-tech interface for automotive exterior spare-part identification and vehicle compatibility inspection.
+The **PartVision Frontend** is a professional automotive computer-vision web application engineered for automotive technicians, spare-parts managers, and repair estimators. It is built with **React 18**, **TypeScript 5**, **Vite 6**, and **Tailwind CSS 3**, implementing a **light-first, technical design system**.
+
+The frontend is strictly decoupled from AI inference and database queries:
+- **Presentation Layer Only**: Zero AI inference is conducted in JavaScript; zero compatibility calculations or fitment heuristics are implemented in the client.
+- **Authoritative Decoupling**: Visual segmentation comes exclusively from the frozen **PartVision V3 YOLO11n-seg** engine via `POST /api/analyze`; vehicular fitment is determined exclusively by the relational SQLite database (`data/partvision.db`).
+- **Trust & Verification**: Verified OEM catalog records are strictly segregated from unverified demonstration records.
 
 ```
-  ┌─────────────────────────────────────────────────────────────┐
-  │                 User Browser / React SPA                    │
-  │   • Image Uploader (Drag & Drop, JPG/PNG/WEBP, Max 20MB)    │
-  │   • High-Precision SVG Segmentation & Bounding Box Overlay  │
-  │   • Interactive Part Instance List & Confidence Meters      │
-  │   • Authoritative Fitment Panel (OEM vs Demonstration)      │
-  │   • Parts Catalog Explorer (19 Classes, 5 Categories)       │
-  │   • System Architecture & YOLO11n-seg Model Metrics Page    │
-  └──────────────────────────────┬──────────────────────────────┘
-                                 │ HTTP / JSON
-                                 ▼
-  ┌─────────────────────────────────────────────────────────────┐
-  │               FastAPI Backend (Port 8000)                   │
-  │   • POST /api/analyze         • GET /health                 │
-  │   • GET  /api/parts           • GET /api/parts/{name}       │
-  │   • GET  /api/vehicles        • GET /api/compatibility/...  │
-  └──────────────────────────────┬──────────────────────────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 ▼                               ▼
-  ┌─────────────────────────────┐ ┌─────────────────────────────┐
-  │   M6A Inference Engine      │ │  M6B Compatibility DB       │
-  │   YOLO11n-seg (Frozen V3)   │ │  SQLite WAL (Authoritative) │
-  │   • 19 Part Classes         │ │  • Zero AI Hallucination    │
-  └─────────────────────────────┘ └─────────────────────────────┘
+                    ┌───────────────────────────────────────────────┐
+                    │               User Interaction                │
+                    │       Image Upload / Browse Parts & Vehicles  │
+                    └───────────────────────┬───────────────────────┘
+                                            │
+                                            ▼
+                    ┌───────────────────────────────────────────────┐
+                    │            React 18 Client (Light UI)         │
+                    │  Header • ImageUploader • DetectionViewer     │
+                    │  DetectionList • CompatibilityPanel • Catalogs│
+                    └───────────────────────┬───────────────────────┘
+                                            │ HTTP / JSON
+                                            ▼
+                    ┌───────────────────────────────────────────────┐
+                    │               FastAPI Backend (Port 8000)     │
+                    │   • POST /api/analyze    • GET /health        │
+                    │   • GET  /api/parts      • GET /api/vehicles  │
+                    └───────────────────────┬───────────────────────┘
+                                            │
+                        ┌───────────────────┴───────────────────┐
+                        ▼                                       ▼
+        ┌───────────────────────────────┐       ┌───────────────────────────────┐
+        │   M6A Inference Engine        │       │   M6B Compatibility Database  │
+        │   YOLO11n-seg (Frozen V3)     │       │   SQLite WAL (Authoritative)  │
+        │   • 19 Part Classes           │       │   • Zero AI Hallucination     │
+        └───────────────────────────────┘       └───────────────────────────────┘
 ```
-
-### Core Design Rules
-1. **Presentation Layer Only**: Zero AI inference is performed in JavaScript; zero compatibility calculations or fitment rules are implemented in React.
-2. **Authoritative Decoupling**: Visual segmentation comes exclusively from the frozen **YOLO11n-seg** engine via `POST /api/analyze`; vehicular fitment is determined exclusively by the relational SQLite database.
-3. **Verified Fitment Segregation**: Verified OEM catalog records are strictly segregated from demonstration or unverified fitments in the UI.
-4. **Zero-Distortion SVG Mapping**: Detection polygons and bounding boxes map 1:1 to original image dimensions using responsive SVG viewports with identical aspect ratio preservation.
 
 ---
 
-## 2. Directory Structure
+## 2. Design System & Tokens
+
+The application employs a calm, information-dense, automotive-grade light palette:
+- **Background**: `#F6F6F3` (`sand-50`)
+- **Card / Surface**: `#FFFFFF` (`white`)
+- **Primary Text**: `#151515` (`sand-900`)
+- **Secondary Text**: `#6B6B68` (`sand-500`)
+- **Borders & Dividers**: `#E3E3DF` (`sand-200`)
+- **Muted Surfaces**: `#F0F0EC` (`sand-100`)
+- **Primary Accent (Automotive Red)**: `#D6452D` (`auto-red-500`)
+- **Success (Verified OEM)**: `#18794E` (`auto-green-500`)
+- **Warning (Unverified / Trim-dependent)**: `#A66A00` (`auto-amber-500`)
+- **Error**: `#B42318` (`auto-rose-500`)
+
+---
+
+## 3. Directory & Component Structure
 
 ```
 frontend/
-├── index.html                   # HTML entry point with dark theme and fonts
+├── index.html                   # HTML entry with Inter/JetBrains fonts & light styling
 ├── package.json                 # Dependencies and npm scripts
-├── postcss.config.js            # PostCSS configuration for Tailwind
-├── tailwind.config.js           # Custom automotive dark theme & colors
-├── tsconfig.json                # TypeScript compiler configuration (strict)
-├── vite.config.ts               # Vite configuration with proxy and test setup
-├── .env.example                 # Template for environment variables
-├── .env                         # Local runtime environment configuration
+├── postcss.config.js            # PostCSS configuration
+├── tailwind.config.js           # Automotive light-first color tokens & typography
+├── tsconfig.json                # Strict TypeScript configuration
+├── vite.config.ts               # Vite configuration with proxy and vitest setup
+├── .env.example                 # Environment template
+├── .env                         # Local environment configuration
 └── src/
-    ├── App.tsx                  # Root component with tab navigation
-    ├── main.tsx                 # React DOM mount point
-    ├── index.css                # Tailwind directives and custom scrollbars
+    ├── App.tsx                  # Application root with tab routing (Analyze, Parts, Vehicles, About)
+    ├── main.tsx                 # React entry point
+    ├── index.css                # Tailwind directives and clean technical scrollbars
     ├── vite-env.d.ts            # Vite client types & ImportMetaEnv
     ├── components/
-    │   ├── Header.tsx           # Global branding, tabs, and live API status badge
-    │   ├── Footer.tsx           # Architecture principles and project credits
-    │   ├── ImageUploader.tsx    # Drag-and-drop file upload, preview, and limits
-    │   ├── DetectionViewer.tsx  # SVG polygon masks and bounding box overlays
-    │   ├── DetectionList.tsx    # Detected instance cards with confidence bars
-    │   ├── CompatibilityPanel.tsx # Strict OEM vs demonstration fitment breakdown
-    │   └── SummaryPanel.tsx     # KPI metrics (counts, confidence, latency)
+    │   ├── Header.tsx           # Brand, tab navigation, and live API status pill
+    │   ├── Footer.tsx           # Architecture principles, model specs, and credits
+    │   ├── ImageUploader.tsx    # Drag-and-drop file upload, preview, format & 20MB validation
+    │   ├── DetectionViewer.tsx  # 1:1 SVG polygon overlay, selected part focus, subdued non-selected parts
+    │   ├── DetectionList.tsx    # Compact technical rows, distinct duplicates, confidence badges
+    │   └── CompatibilityPanel.tsx # Strict OEM vs demonstration fitment breakdown and trust banner
     ├── pages/
-    │   ├── AnalyzePage.tsx      # Main image analysis workspace
-    │   ├── PartsPage.tsx        # 19-class parts catalog with fitment modal
-    │   └── AboutPage.tsx        # Technical architecture and V3 model metrics
+    │   ├── AnalyzePage.tsx      # Core diagnostic workflow & dual-column analysis workspace
+    │   ├── PartsPage.tsx        # 19-class parts catalog with category pills & fitment modal
+    │   ├── VehiclesPage.tsx     # Vehicle catalog with make filter & compatible parts drilldown
+    │   └── AboutPage.tsx        # Technical architecture, V3 model metrics, and specifications
     ├── hooks/
-    │   ├── useAnalysis.ts       # State management for file upload and API analysis
-    │   └── useApiHealth.ts      # Periodic API health status polling
+    │   ├── useAnalysis.ts       # Upload validation, API analysis lifecycle, and selection state
+    │   └── useApiHealth.ts      # Periodic API health polling (/health)
     ├── services/
-    │   └── api.ts               # Centralized typed HTTP client for FastAPI backend
+    │   └── api.ts               # Typed client service for all FastAPI REST endpoints
     ├── types/
-    │   └── api.ts               # TypeScript interfaces mirroring FastAPI Pydantic schemas
+    │   └── api.ts               # Strict TypeScript types mirroring FastAPI Pydantic schemas
     ├── utils/
-    │   └── colors.ts            # Taxonomy palette mapping for all 19 part classes
+    │   └── colors.ts            # High-legibility technical color palette for 19 part classes
     └── test/
-        ├── setup.ts             # Vitest test setup (jest-dom matchers)
+        ├── setup.ts             # Vitest test setup with @testing-library/jest-dom
         ├── api.test.ts          # Unit tests for API service layer
-        └── App.test.tsx         # Component and navigation integration tests
+        └── App.test.tsx         # Component integration tests
 ```
 
 ---
 
-## 3. Getting Started
+## 4. Primary UX Workflow
+
+1. **Upload**: User drops or selects an exterior vehicle photograph (JPEG, PNG, WEBP up to 20MB). Client immediately validates dimensions and file size.
+2. **Preview & Confirm**: A large framed preview appears displaying filename, file size, "Change image", and prominent "Analyze image" action.
+3. **Analyze**: Submits multipart payload to `POST /api/analyze`. Honest loading state ("Analyzing image...") without fabricated multi-stage animations.
+4. **Inspect Results**:
+   - **Workspace**: Transforms into a two-column desktop workspace.
+   - **Left Column**: High-resolution image viewer with 1:1 SVG segmentation polygons and bounding boxes.
+   - **Right Column**: Compact technical list of detected components with exact model confidence percentages.
+5. **Interactive Selection**: Clicking a row or clicking on the image selects the component:
+   - Selected part's mask is highlighted in Automotive Red (`#D6452D`).
+   - Other detected components become visually subdued.
+   - Compatibility panel focuses on the selected part.
+6. **Verified Compatibility**: Displays verified OEM vehicle fitments (make, model, generation, year span, direct fit status) with OEM source attribution. Unverified records are strictly segregated.
+7. **Reset**: "Analyze another image" button cleanly resets state without a full page reload.
+
+---
+
+## 5. Setup & Development
 
 ### Prerequisites
-- **Node.js**: v18.0.0 or higher (v20+ recommended)
-- **npm**: v9.0.0 or higher
-- Running **PartVision FastAPI backend** on `http://127.0.0.1:8000`
+- Node.js 18+ (Node 20+ recommended)
+- Running FastAPI backend on `http://127.0.0.1:8000`
 
 ### Installation
-From the repository root:
 ```bash
 cd frontend
 npm install
 ```
 
 ### Environment Configuration
-The frontend connects to the backend via `VITE_API_BASE_URL`. Copy the template if `.env` does not exist:
 ```bash
 cp .env.example .env
 ```
-Default `.env` contents:
+Default content:
 ```env
 VITE_API_BASE_URL=http://127.0.0.1:8000
 ```
@@ -114,109 +145,29 @@ VITE_API_BASE_URL=http://127.0.0.1:8000
 ```bash
 npm run dev
 ```
-By default, the Vite development server starts at:
-```
-http://localhost:5173
-```
-API requests to `/api` and `/health` are automatically proxied to `http://127.0.0.1:8000` if relative paths are used, or accessed directly via `VITE_API_BASE_URL`.
-
-### Building for Production
-```bash
-npm run build
-```
-This runs `tsc` for complete type-checking followed by Vite's production bundler, producing optimized static assets in `frontend/dist/`.
-
-### Previewing Production Build
-```bash
-npm run preview
-```
+Available at `http://localhost:5173`.
 
 ### Running Automated Tests
 ```bash
 npm run test
 ```
-Runs the Vitest suite covering API client methods and React component rendering.
+
+### Production Build
+```bash
+npm run build
+```
+Generates static assets in `frontend/dist/`.
 
 ---
 
-## 4. Key Components and Features
+## 6. API Integration Endpoints
 
-### 4.1 Image Uploader (`ImageUploader.tsx`)
-- Drag-and-drop zone and click-to-browse file selector.
-- Enforces allowed MIME types (`image/jpeg`, `image/png`, `image/webp`).
-- Rejects files exceeding the 20MB limit with immediate user feedback.
-- Generates a local preview thumbnail before submission.
-- One-click reset clears current upload and resets analysis state.
-
-### 4.2 High-Precision Detection Viewer (`DetectionViewer.tsx`)
-- Displays the original vehicle image in an responsive container.
-- Renders an SVG overlay matching the backend image's coordinate space (`viewBox="0 0 width height"`).
-- Features toggleable bounding boxes, polygon segmentation masks, and label tags.
-- Interactive cross-highlighting: hovering or clicking a polygon highlights both the mask and corresponding detection card.
-- Renders segmented masks with class-specific color schemes from `colors.ts`.
-
-### 4.3 Detection List (`DetectionList.tsx`)
-- Displays distinct cards for every detection instance, correctly preserving duplicates (e.g. multiple distinct wheels or doors).
-- Shows class display name, confidence percentage bar, canonical taxonomy string, and verified fitment counter.
-- Clicking an instance focuses the vehicle compatibility panel.
-
-### 4.4 Compatibility Panel (`CompatibilityPanel.tsx`)
-- Enforces the architectural rule: **"YOLO detects visual parts; SQLite determines compatibility."**
-- Filters fitments by tab: **All**, **Verified OEM**, or **Demonstration/Unverified**.
-- Displays vehicle make, model, generation, year span, vehicle type, fitment status (`direct_fit`, `trim_dependent`), and source.
-- Prominently displays safety and trust disclaimers reminding users that compatibility is retrieved from relational database records, not generative AI.
-
-### 4.5 Summary KPI Panel (`SummaryPanel.tsx`)
-- Total parts detected in image.
-- Count of unique part categories.
-- Top model confidence percentage.
-- Count of verified OEM vehicular fitments.
-- Pipeline execution latency reported directly by backend.
-
-### 4.6 Parts Catalog (`PartsPage.tsx`)
-- Browses all 19 canonical PartVision V3 classes categorized into:
-  - *Exterior Body* (`front_bumper`, `back_bumper`, `fender`, `hood`, `trunk`, `tailgate`, `quarter_panel`, `rocker_panel`, `roof`)
-  - *Exterior Glass* (`front_glass`, `back_glass`, `side_window`)
-  - *Lighting* (`front_light`, `back_light`)
-  - *Mirrors* (`mirror`)
-  - *Wheels* (`wheel`)
-  - *Doors & Grille* (`front_door`, `back_door`, `grille`)
-- Category pill filters and real-time search filter.
-- Deep-dive modal displays part descriptions, known search aliases, and real-time compatibility lookup.
-
-### 4.7 Technical Architecture Page (`AboutPage.tsx`)
-- Documents the end-to-end pipeline and model specifications.
-- Details the frozen PartVision V3 YOLO11n-seg model (85.70% mAP50, 4,831 training images, 35,759 polygon instances).
-- Explains architectural decoupling ensuring zero AI hallucination in vehicular fitment.
-
----
-
-## 5. Visual Styling & Color Tokens
-
-Tailwind CSS has been configured with an automotive-grade dark graphite palette:
-- **Base Background**: `#090b10` (`graphite-950`)
-- **Card / Surface Background**: `#11131a` (`graphite-900`)
-- **Card Highlight / Active**: `#1a1d26` (`graphite-850`)
-- **Borders & Dividers**: `#262933` (`graphite-800`)
-- **Primary Accent**: `#00f0ff` (Cyan) with subtle drop glows
-- **Secondary Accent**: `#0066ff` (Electric Blue)
-- **Status Colors**:
-  - Success / Verified: `#10b981` (Emerald)
-  - Warning / Trim-Dependent: `#f59e0b` (Amber)
-  - Danger / Error: `#f43f5e` (Rose)
-
----
-
-## 6. API Integration Contract
-
-The frontend strictly uses the endpoints defined in Milestone 7:
-
-| Endpoint | Method | Purpose |
-| :--- | :--- | :--- |
-| `/health` | `GET` | Health monitoring badge; checks model and database readiness |
-| `/api/analyze` | `POST` | Uploads multipart image and receives detections + compatibility |
-| `/api/parts` | `GET` | Catalog browsing with category and query filters |
-| `/api/parts/{part_name}` | `GET` | Detailed part description, aliases, and compatible vehicles |
-| `/api/vehicles` | `GET` | List all supported vehicles in database |
-| `/api/vehicles/{vehicle_id}` | `GET` | Vehicle details and all compatible parts |
-| `/api/compatibility/{part_name}` | `GET` | Fast vehicle compatibility lookup for a specific part |
+| Endpoint | Method | Client Method | Purpose |
+| :--- | :--- | :--- | :--- |
+| `/health` | `GET` | `api.healthCheck()` | Polls backend readiness and model status |
+| `/api/analyze` | `POST` | `api.analyzeImage(file)` | Uploads image; returns detections + fitment |
+| `/api/parts` | `GET` | `api.getParts(category, search)` | Catalog list filtered by category/query |
+| `/api/parts/{part_name}` | `GET` | `api.getPart(name)` | Full details, aliases, and compatible vehicles |
+| `/api/vehicles` | `GET` | `api.getVehicles(make, model)` | Vehicles list with optional make filter |
+| `/api/vehicles/{vehicle_id}` | `GET` | `api.getVehicle(id)` | Vehicle specifications and compatible OEM parts |
+| `/api/compatibility/{part_name}` | `GET` | `api.getCompatibility(name)` | Direct compatibility query |
