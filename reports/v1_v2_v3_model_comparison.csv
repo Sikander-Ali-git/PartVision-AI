@@ -1,0 +1,19 @@
+metric_field,v1_baseline,v2_consolidated,v3_unified,experimental_notes_and_confounders
+Dataset,Carparts-Seg (V1),Carparts-V2,PartVision-V3,Dataset version and source
+Classes,23,13,19,Taxonomy size (23 vs 13 vs 19 classes)
+Images,3833,3833,4831,Total dataset image count
+Annotations,20362,20362,35759,Total ground-truth polygon instances
+Epochs,3,10,15,"CONFOUNDING: V1=3, V2=10, V3=15 epochs"
+Image Size,640,512,512,"CONFOUNDING: V1=640, V2/V3=512"
+Batch Size,16,8,8,"CONFOUNDING: V1=16, V2/V3=8"
+Training Duration,"30m 20.5s (1,820.47s)","155m 20.2s (9,320.18s)",1h 57m 43.7s (7063.71s),Elapsed training wall-clock time
+Parameters,"2,839,053","2,836,373","2,846,313",Model parameter count
+Model Size,5.73 MB,5.71 MB,5.71 MB,Best checkpoint file size on disk
+Detection Precision,0.6536,0.7610,0.8026,Detection box precision
+Detection Recall,0.4876,0.8319,0.8088,Detection box recall
+Detection mAP50,0.4803,0.8101,0.8465,Detection box mAP @ 0.50 IoU
+Detection mAP50-95,0.3721,0.6630,0.6413,Detection box mAP @ 0.50:0.95 IoU
+Segmentation Precision,0.6663,0.7673,0.8136,Segmentation mask precision
+Segmentation Recall,0.4938,0.8307,0.8182,Segmentation mask recall
+Segmentation mAP50,0.4935,0.8180,0.8570,Segmentation mask mAP @ 0.50 IoU
+Segmentation mAP50-95,0.3581,0.6414,0.5984,Segmentation mask mAP @ 0.50:0.95 IoU

@@ -1,0 +1,20 @@
+class_id,class_name,carparts_v2_count,hitl_count,v3_total_count,v2_percentage,hitl_percentage,depends_entirely_on_hitl,representation_status,notes
+0,back_bumper,870,443,1313,66.26%,33.74%,NO,WELL REPRESENTED,Joint coverage from both datasets
+1,back_door,1731,721,2452,70.60%,29.40%,NO,WELL REPRESENTED,Joint coverage from both datasets
+2,back_glass,1058,1508,2566,41.23%,58.77%,NO,WELL REPRESENTED,Significantly bolstered by HITL (+1508 instances)
+3,back_light,2434,721,3155,77.15%,22.85%,NO,WELL REPRESENTED,Joint coverage from both datasets
+4,fender,0,935,935,0.00%,100.00%,YES (100% HITL),MODERATE (<1000),Newly introduced class from HITL
+5,front_bumper,1978,705,2683,73.72%,26.28%,NO,WELL REPRESENTED,Joint coverage from both datasets
+6,front_door,1936,917,2853,67.86%,32.14%,NO,WELL REPRESENTED,Joint coverage from both datasets
+7,front_glass,2062,632,2694,76.54%,23.46%,NO,WELL REPRESENTED,Joint coverage from both datasets
+8,front_light,4066,914,4980,81.65%,18.35%,NO,WELL REPRESENTED,Joint coverage from both datasets
+9,grille,0,577,577,0.00%,100.00%,YES (100% HITL),MODERATE (<1000),Newly introduced class from HITL
+10,hood,2080,712,2792,74.50%,25.50%,NO,WELL REPRESENTED,Joint coverage from both datasets
+11,mirror,996,987,1983,50.23%,49.77%,NO,WELL REPRESENTED,Significantly bolstered by HITL (+987 instances)
+12,quarter_panel,0,855,855,0.00%,100.00%,YES (100% HITL),MODERATE (<1000),Newly introduced class from HITL
+13,rocker_panel,0,860,860,0.00%,100.00%,YES (100% HITL),MODERATE (<1000),Newly introduced class from HITL
+14,roof,0,793,793,0.00%,100.00%,YES (100% HITL),MODERATE (<1000),Newly introduced class from HITL
+15,side_window,0,951,951,0.00%,100.00%,YES (100% HITL),MODERATE (<1000),Newly introduced class from HITL
+16,tailgate,101,0,101,100.00%,0.00%,NO,SEVERELY UNDERREPRESENTED,Retained solely from Carparts-V2
+17,trunk,173,416,589,29.37%,70.63%,NO,MODERATE (<1000),Significantly bolstered by HITL (+416 instances)
+18,wheel,877,1750,2627,33.38%,66.62%,NO,WELL REPRESENTED,Significantly bolstered by HITL (+1750 instances)
