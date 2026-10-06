@@ -1,0 +1,37 @@
+{
+  "benchmark_label": "Local M3 development-server benchmark",
+  "system": {
+    "device": "mps",
+    "image": "hitl_Car_damages_1033.png",
+    "resolution": "699x527",
+    "iterations": 5
+  },
+  "startup": {
+    "application_startup_ms": 68.17,
+    "model_initialization_ms": 48.74
+  },
+  "model_inference_latency_ms": {
+    "min": 38.01,
+    "avg": 41.17,
+    "max": 44.21,
+    "runs": [
+      44.21,
+      40.34,
+      44.19,
+      39.11,
+      38.01
+    ]
+  },
+  "full_api_request_latency_ms": {
+    "min": 136.2,
+    "avg": 143.84,
+    "max": 156.01,
+    "runs": [
+      145.11,
+      141.97,
+      156.01,
+      136.2,
+      139.93
+    ]
+  }
+}

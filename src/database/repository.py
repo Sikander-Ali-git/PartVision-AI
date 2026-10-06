@@ -114,6 +114,15 @@ class PartVisionRepository:
                 return Part.model_validate(dict(row))
         return None
 
+    def get_aliases_for_part(self, part_id: int) -> List[str]:
+        """Returns all registered search aliases for a part."""
+        with self._get_conn() as conn:
+            cursor = conn.execute(
+                "SELECT alias FROM part_aliases WHERE part_id = ? ORDER BY alias ASC",
+                (part_id,)
+            )
+            return [str(r["alias"]) for r in cursor.fetchall()]
+
     # -------------------------------------------------------------------------
     # Vehicles Operations
     # -------------------------------------------------------------------------
