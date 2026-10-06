@@ -38,3 +38,7 @@ reports/inference/
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# SQLite temporary journal/wal files
+*.db-wal
+*.db-shm
