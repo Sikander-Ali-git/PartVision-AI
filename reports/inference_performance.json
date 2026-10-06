@@ -1,0 +1,160 @@
+{
+  "benchmark_label": "Local M3 smoke-test performance",
+  "device": "mps",
+  "model_checkpoint": "partvision_v3_yolo11n_seg_best.pt",
+  "model_loading_time_ms": 46.24,
+  "model_loading_time_seconds": 0.046,
+  "images_evaluated_count": 7,
+  "latency_metrics_ms": {
+    "average": 567.39,
+    "minimum": 181.54,
+    "maximum": 800.29,
+    "std_dev": 222.99
+  },
+  "throughput_fps": 1.76,
+  "validation_records": [
+    {
+      "image": "hitl_Car_damages_1033.png",
+      "dimensions": "699x527",
+      "latency_ms": 181.54,
+      "detection_count": 18,
+      "detected_classes": [
+        "wheel",
+        "front_glass",
+        "front_light",
+        "hood",
+        "fender",
+        "grille",
+        "mirror",
+        "front_door",
+        "front_bumper",
+        "rocker_panel",
+        "side_window",
+        "quarter_panel",
+        "back_glass",
+        "back_door",
+        "roof"
+      ],
+      "json_output": "hitl_Car_damages_1033_result.json",
+      "annotated_image": "hitl_Car_damages_1033_annotated.jpg"
+    },
+    {
+      "image": "hitl_Car_damages_1050.png",
+      "dimensions": "705x423",
+      "latency_ms": 800.29,
+      "detection_count": 23,
+      "detected_classes": [
+        "back_glass",
+        "wheel",
+        "back_door",
+        "fender",
+        "front_light",
+        "front_bumper",
+        "rocker_panel",
+        "grille",
+        "front_door",
+        "front_glass",
+        "hood",
+        "side_window",
+        "mirror",
+        "quarter_panel",
+        "roof",
+        "back_light"
+      ],
+      "json_output": "hitl_Car_damages_1050_result.json",
+      "annotated_image": "hitl_Car_damages_1050_annotated.jpg"
+    },
+    {
+      "image": "hitl_Car_damages_1052.png",
+      "dimensions": "706x481",
+      "latency_ms": 724.98,
+      "detection_count": 19,
+      "detected_classes": [
+        "back_glass",
+        "wheel",
+        "front_door",
+        "quarter_panel",
+        "rocker_panel",
+        "back_bumper",
+        "back_light",
+        "trunk",
+        "side_window",
+        "back_door",
+        "mirror",
+        "fender",
+        "roof"
+      ],
+      "json_output": "hitl_Car_damages_1052_result.json",
+      "annotated_image": "hitl_Car_damages_1052_annotated.jpg"
+    },
+    {
+      "image": "hitl_Car_damages_1057.png",
+      "dimensions": "706x537",
+      "latency_ms": 414.05,
+      "detection_count": 2,
+      "detected_classes": [
+        "side_window",
+        "front_glass"
+      ],
+      "json_output": "hitl_Car_damages_1057_result.json",
+      "annotated_image": "hitl_Car_damages_1057_annotated.jpg"
+    },
+    {
+      "image": "hitl_Car_damages_1068.png",
+      "dimensions": "902x635",
+      "latency_ms": 719.51,
+      "detection_count": 21,
+      "detected_classes": [
+        "hood",
+        "wheel",
+        "fender",
+        "back_glass",
+        "front_bumper",
+        "front_door",
+        "front_light",
+        "grille",
+        "back_door",
+        "front_glass",
+        "rocker_panel",
+        "mirror",
+        "quarter_panel",
+        "side_window",
+        "roof"
+      ],
+      "json_output": "hitl_Car_damages_1068_result.json",
+      "annotated_image": "hitl_Car_damages_1068_annotated.jpg"
+    },
+    {
+      "image": "car87_jpg.rf.27fc37a7f231e296a3b36ba606e9261c.jpg",
+      "dimensions": "640x640",
+      "latency_ms": 757.32,
+      "detection_count": 12,
+      "detected_classes": [
+        "back_glass",
+        "back_light",
+        "back_bumper",
+        "back_door",
+        "front_door",
+        "trunk",
+        "wheel",
+        "tailgate",
+        "mirror"
+      ],
+      "json_output": "car87_jpg.rf.27fc37a7f231e296a3b36ba606e9261c_result.json",
+      "annotated_image": "car87_jpg.rf.27fc37a7f231e296a3b36ba606e9261c_annotated.jpg"
+    },
+    {
+      "image": "car42_jpg.rf.26816b314b704b50cd0270a11bc3c2ee.jpg",
+      "dimensions": "640x640",
+      "latency_ms": 374.01,
+      "detection_count": 4,
+      "detected_classes": [
+        "back_glass",
+        "back_light",
+        "back_bumper"
+      ],
+      "json_output": "car42_jpg.rf.26816b314b704b50cd0270a11bc3c2ee_result.json",
+      "annotated_image": "car42_jpg.rf.26816b314b704b50cd0270a11bc3c2ee_annotated.jpg"
+    }
+  ]
+}

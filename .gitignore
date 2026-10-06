@@ -4,6 +4,7 @@ env/
 venv/
 .cache/
 .hf_cache/
+.pytest_cache/
 
 # Byte-compiled / optimized files
 __pycache__/
@@ -30,6 +31,7 @@ models/*.pt
 # Training runs & intermediate artifacts
 runs/
 *.log
+reports/inference/
 
 # Editor & IDE settings
 .vscode/
