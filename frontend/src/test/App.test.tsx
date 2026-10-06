@@ -1,0 +1,134 @@
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { App } from '../App';
+import { DetectionList } from '../components/DetectionList';
+import { CompatibilityPanel } from '../components/CompatibilityPanel';
+import { Detection } from '../types/api';
+
+describe('App & Component Tests', () => {
+  beforeEach(() => {
+    // Mock health check fetch
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        status: 'healthy',
+        service: 'PartVision AI API',
+        version: '0.4.0',
+        model: 'partvision_v3_yolo11n_seg',
+        model_loaded: true,
+        database_connected: true,
+      }),
+    } as Response);
+  });
+
+  it('renders application header and default Analyze tab', async () => {
+    render(<App />);
+    expect(screen.getAllByText(/PARTVISION/i)[0]).toBeInTheDocument();
+    expect(screen.getByText(/Automotive Vision Intelligence/i)).toBeInTheDocument();
+    expect(await screen.findByText(/API Online/i)).toBeInTheDocument();
+  });
+
+  it('navigates between Analyze, Parts Catalog, and About tabs', async () => {
+    render(<App />);
+    expect(await screen.findByText(/API Online/i)).toBeInTheDocument();
+
+    // Click Parts Catalog tab
+    const partsTabBtn = screen.getByRole('button', { name: /Parts Catalog/i });
+    fireEvent.click(partsTabBtn);
+    expect(screen.getByText(/Automotive Spare-Parts Catalog/i)).toBeInTheDocument();
+
+    // Click About tab
+    const aboutTabBtn = screen.getByRole('button', { name: /About/i });
+    fireEvent.click(aboutTabBtn);
+    expect(screen.getByText(/PartVision AI Architecture/i)).toBeInTheDocument();
+    expect(screen.getByText(/Strict Decoupling: Vision vs Compatibility/i)).toBeInTheDocument();
+
+    // Click back to Analyze
+    const analyzeTabBtn = screen.getByRole('button', { name: /Analyze/i });
+    fireEvent.click(analyzeTabBtn);
+    expect(screen.getByText(/Vehicle Image Workspace/i)).toBeInTheDocument();
+  });
+
+  it('DetectionList preserves duplicate class instances distinctly', () => {
+    const mockDetections: Detection[] = [
+      {
+        class_id: 18,
+        part_name: 'wheel',
+        display_name: 'Wheel',
+        confidence: 0.954,
+        bbox: { x1: 50, y1: 160, x2: 95, y2: 250 },
+        compatibility: { verified_vehicles: [], unverified_vehicles: [], total_matches: 0 },
+      },
+      {
+        class_id: 18,
+        part_name: 'wheel',
+        display_name: 'Wheel',
+        confidence: 0.938,
+        bbox: { x1: 175, y1: 268, x2: 274, y2: 452 },
+        compatibility: { verified_vehicles: [], unverified_vehicles: [], total_matches: 0 },
+      },
+    ];
+
+    render(
+      <DetectionList
+        detections={mockDetections}
+        selectedIndex={0}
+        hoveredIndex={null}
+        onSelectDetection={vi.fn()}
+        onHoverDetection={vi.fn()}
+      />
+    );
+
+    // Both wheel instances must be rendered
+    const wheelLabels = screen.getAllByText('Wheel');
+    expect(wheelLabels).toHaveLength(2);
+    expect(screen.getByText('95.4%')).toBeInTheDocument();
+    expect(screen.getByText('93.8%')).toBeInTheDocument();
+    expect(screen.getByText(/#1 • wheel/i)).toBeInTheDocument();
+    expect(screen.getByText(/#2 • wheel/i)).toBeInTheDocument();
+  });
+
+  it('CompatibilityPanel strictly separates verified and unverified fitment records', () => {
+    const mockDetection: Detection = {
+      class_id: 5,
+      part_name: 'front_bumper',
+      display_name: 'Front Bumper',
+      confidence: 0.942,
+      bbox: { x1: 100, y1: 100, x2: 400, y2: 300 },
+      compatibility: {
+        verified_vehicles: [
+          {
+            id: 1,
+            make: 'Maruti Suzuki',
+            model: 'Swift',
+            generation: '3rd Gen',
+            year_start: 2018,
+            year_end: 2024,
+            compatibility_status: 'compatible',
+            source: 'MSGP Catalog',
+            verified: true,
+          },
+        ],
+        unverified_vehicles: [
+          {
+            id: 99,
+            make: 'Aftermarket',
+            model: 'Universal Lip',
+            compatibility_status: 'custom_fit',
+            source: 'Demonstration Catalog',
+            verified: false,
+          },
+        ],
+        total_matches: 2,
+      },
+    };
+
+    render(<CompatibilityPanel detection={mockDetection} />);
+
+    expect(screen.getByText(/Front Bumper/i)).toBeInTheDocument();
+    expect(screen.getByText(/Verified Fitment \(OEM Catalogs\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/Maruti Suzuki Swift \(3rd Gen\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/Unverified \/ Demonstration Fitment/i)).toBeInTheDocument();
+    expect(screen.getByText(/Aftermarket Universal Lip/i)).toBeInTheDocument();
+  });
+});
