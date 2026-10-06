@@ -1,0 +1,18 @@
+{
+  "audit_timestamp": "2026-10-06T21:38:40+05:30",
+  "python_version": "3.13.2",
+  "node_version": "24.15.0",
+  "npm_version": "11.12.1",
+  "fastapi_version": "0.142.2",
+  "react_version": "18.3.1",
+  "vite_version": "6.4.4",
+  "ultralytics_version": "8.4.171",
+  "pydantic_version": "2.13.5",
+  "sqlite_version": "3.45.3",
+  "opencv_version": "5.0.0",
+  "pytorch_version": "2.14.1",
+  "os": "macOS (Darwin 27.0.0)",
+  "cpu_architecture": "arm64 (Apple Silicon M3)",
+  "mps_available": true,
+  "mps_built": true
+}

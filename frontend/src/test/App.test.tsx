@@ -7,7 +7,7 @@ import { Detection } from '../types/api';
 
 describe('App & Component Tests', () => {
   beforeEach(() => {
-    // Mock health check fetch
+    window.history.pushState(null, '', '/');
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -34,22 +34,39 @@ describe('App & Component Tests', () => {
     const partsTabBtn = screen.getByRole('button', { name: /^Parts$/i });
     fireEvent.click(partsTabBtn);
     expect(screen.getByText(/Browse the automotive components currently supported by PartVision/i)).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/parts');
 
     // Click Vehicles tab
     const vehiclesTabBtn = screen.getByRole('button', { name: /^Vehicles$/i });
     fireEvent.click(vehiclesTabBtn);
     expect(screen.getByText(/Browse supported vehicles and compatible OEM components/i)).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/vehicles');
 
     // Click About tab
     const aboutTabBtn = screen.getByRole('button', { name: /^About$/i });
     fireEvent.click(aboutTabBtn);
     expect(screen.getByText(/About PartVision/i)).toBeInTheDocument();
     expect(screen.getByText(/What is PartVision\?/i)).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/about');
 
     // Click back to Analyze
     const analyzeTabBtn = screen.getByRole('button', { name: /^Analyze$/i });
     fireEvent.click(analyzeTabBtn);
     expect(screen.getByText(/Identify an automotive part/i)).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/');
+  });
+
+  it('renders 404 page for unknown routes and navigates home', () => {
+    window.history.pushState(null, '', '/unsupported/invalid/path');
+    render(<App />);
+
+    expect(screen.getByText(/Page Not Found/i)).toBeInTheDocument();
+    expect(screen.getByText(/The requested route does not exist/i)).toBeInTheDocument();
+
+    const homeBtn = screen.getByRole('button', { name: /Return to PartVision Home/i });
+    fireEvent.click(homeBtn);
+    expect(screen.getByText(/Identify an automotive part/i)).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/');
   });
 
   it('DetectionList preserves duplicate class instances distinctly', () => {

@@ -18,7 +18,15 @@ const CATEGORIES = [
   'Wheels',
 ];
 
-export const PartsPage: React.FC = () => {
+interface PartsPageProps {
+  initialPartName?: string | null;
+  onPartSelect?: (partName: string | null) => void;
+}
+
+export const PartsPage: React.FC<PartsPageProps> = ({
+  initialPartName = null,
+  onPartSelect,
+}) => {
   const [parts, setParts] = useState<Part[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +34,7 @@ export const PartsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Selected Part for Detail View
-  const [activePartName, setActivePartName] = useState<string | null>(null);
+  const [activePartName, setActivePartName] = useState<string | null>(initialPartName);
   const [partDetail, setPartDetail] = useState<PartDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState<boolean>(false);
   const [detailError, setDetailError] = useState<string | null>(null);
@@ -50,8 +58,11 @@ export const PartsPage: React.FC = () => {
     fetchParts();
   }, [selectedCategory, searchQuery]);
 
-  const handleOpenDetail = async (partName: string) => {
+  const handleOpenDetail = async (partName: string, notify = true) => {
     setActivePartName(partName);
+    if (notify && onPartSelect) {
+      onPartSelect(partName);
+    }
     setLoadingDetail(true);
     setDetailError(null);
     try {
@@ -64,10 +75,19 @@ export const PartsPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (initialPartName && initialPartName !== activePartName) {
+      handleOpenDetail(initialPartName, false);
+    }
+  }, [initialPartName]);
+
   const handleCloseDetail = () => {
     setActivePartName(null);
     setPartDetail(null);
     setDetailError(null);
+    if (onPartSelect) {
+      onPartSelect(null);
+    }
   };
 
   return (

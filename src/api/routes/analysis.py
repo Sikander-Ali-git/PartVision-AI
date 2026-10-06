@@ -32,6 +32,8 @@ router = APIRouter(prefix="/api", tags=["Analysis"])
 
 # Constraints
 MAX_UPLOAD_SIZE_BYTES = 20 * 1024 * 1024  # 20 MB
+MAX_IMAGE_DIMENSION = 8192  # Max single dimension (width or height)
+MAX_IMAGE_PIXELS = 40_000_000  # Max total pixels (40 megapixels)
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 ALLOWED_MIME_TYPES = {
     "image/jpeg",
@@ -62,6 +64,12 @@ async def analyze_image(
 
     # 1. Validate file extension and MIME type
     filename = file.filename or "uploaded_image.jpg"
+    if "\x00" in filename or "%00" in filename:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid filename containing null bytes.",
+        )
+
     ext = Path(filename).suffix.lower()
 
     if ext not in ALLOWED_EXTENSIONS:
@@ -100,6 +108,16 @@ async def analyze_image(
         )
 
     height, width = decoded_img.shape[:2]
+
+    # 3b. Validate image dimensions and pixel count limits (resource safety)
+    if width > MAX_IMAGE_DIMENSION or height > MAX_IMAGE_DIMENSION or (width * height) > MAX_IMAGE_PIXELS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"Image dimensions ({width}x{height}) exceed maximum allowed limits "
+                f"(maximum {MAX_IMAGE_DIMENSION}x{MAX_IMAGE_DIMENSION} pixels or 40 megapixels)."
+            ),
+        )
 
     # 4. Safe temporary file processing
     temp_file = None

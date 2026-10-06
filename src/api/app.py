@@ -142,7 +142,7 @@ def create_app() -> FastAPI:
         errors = exc.errors()
         error_msg = errors[0]["msg"] if errors else "Invalid request data."
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={
                 "error": "ValidationError",
                 "detail": error_msg,

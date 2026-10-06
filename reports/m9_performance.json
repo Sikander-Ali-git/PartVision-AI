@@ -1,0 +1,102 @@
+{
+  "benchmark_label": "Local M3 development benchmark",
+  "timestamp": "2026-10-06T16:17:19Z",
+  "hardware": {
+    "device": "mps",
+    "architecture": "Apple Silicon M3",
+    "os": "macOS"
+  },
+  "test_image": {
+    "name": "hitl_Car_damages_1033.png",
+    "size_bytes": 872527
+  },
+  "decomposed_latency": {
+    "image_decode": {
+      "min_ms": 11.05,
+      "mean_ms": 11.24,
+      "median_ms": 11.2,
+      "p50_ms": 11.2,
+      "p95_ms": 11.46,
+      "p99_ms": 11.52,
+      "max_ms": 11.53
+    },
+    "model_inference": {
+      "min_ms": 68.61,
+      "mean_ms": 74.49,
+      "median_ms": 71.43,
+      "p50_ms": 71.43,
+      "p95_ms": 89.04,
+      "p99_ms": 89.92,
+      "max_ms": 90.15
+    },
+    "database_lookup": {
+      "min_ms": 29.71,
+      "mean_ms": 33.05,
+      "median_ms": 33.59,
+      "p50_ms": 33.59,
+      "p95_ms": 34.11,
+      "p99_ms": 34.32,
+      "max_ms": 34.38
+    },
+    "serialization": {
+      "min_ms": 1.68,
+      "mean_ms": 1.76,
+      "median_ms": 1.75,
+      "p50_ms": 1.75,
+      "p95_ms": 1.84,
+      "p99_ms": 2.01,
+      "max_ms": 2.06
+    },
+    "full_api_request": {
+      "min_ms": 127.1,
+      "mean_ms": 148.15,
+      "median_ms": 146.79,
+      "p50_ms": 146.79,
+      "p95_ms": 160.25,
+      "p99_ms": 163.56,
+      "max_ms": 164.38
+    }
+  },
+  "concurrency_smoke_test": {
+    "concurrency_1": {
+      "concurrency": 1,
+      "total_requests": 8,
+      "successful_requests": 8,
+      "failures": 0,
+      "avg_latency_ms": 157.92,
+      "p50_ms": 145.97,
+      "p95_ms": 222.05,
+      "max_latency_ms": 255.67
+    },
+    "concurrency_2": {
+      "concurrency": 2,
+      "total_requests": 8,
+      "successful_requests": 8,
+      "failures": 0,
+      "avg_latency_ms": 268.9,
+      "p50_ms": 285.5,
+      "p95_ms": 294.51,
+      "max_latency_ms": 296.18
+    },
+    "concurrency_4": {
+      "concurrency": 4,
+      "total_requests": 8,
+      "successful_requests": 8,
+      "failures": 0,
+      "avg_latency_ms": 442.88,
+      "p50_ms": 471.98,
+      "p95_ms": 684.92,
+      "max_latency_ms": 686.41
+    },
+    "concurrency_8": {
+      "concurrency": 8,
+      "total_requests": 16,
+      "successful_requests": 16,
+      "failures": 0,
+      "avg_latency_ms": 916.39,
+      "p50_ms": 1083.87,
+      "p95_ms": 1315.27,
+      "max_latency_ms": 1320.06
+    }
+  }
+}

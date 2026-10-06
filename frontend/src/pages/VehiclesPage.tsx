@@ -8,7 +8,15 @@ import { api } from '../services/api';
 import { Vehicle, VehicleDetail } from '../types/api';
 import { MagnifyingGlass, X, SpinnerGap, CheckCircle, Car } from '@phosphor-icons/react';
 
-export const VehiclesPage: React.FC = () => {
+interface VehiclesPageProps {
+  initialVehicleId?: number | null;
+  onVehicleSelect?: (vehicleId: number | null) => void;
+}
+
+export const VehiclesPage: React.FC<VehiclesPageProps> = ({
+  initialVehicleId = null,
+  onVehicleSelect,
+}) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +26,7 @@ export const VehiclesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Vehicle Detail View
-  const [activeVehicleId, setActiveVehicleId] = useState<number | null>(null);
+  const [activeVehicleId, setActiveVehicleId] = useState<number | null>(initialVehicleId);
   const [vehicleDetail, setVehicleDetail] = useState<VehicleDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState<boolean>(false);
   const [detailError, setDetailError] = useState<string | null>(null);
@@ -56,8 +64,11 @@ export const VehiclesPage: React.FC = () => {
     );
   });
 
-  const handleOpenDetail = async (vehicleId: number) => {
+  const handleOpenDetail = async (vehicleId: number, notify = true) => {
     setActiveVehicleId(vehicleId);
+    if (notify && onVehicleSelect) {
+      onVehicleSelect(vehicleId);
+    }
     setLoadingDetail(true);
     setDetailError(null);
     try {
@@ -70,10 +81,19 @@ export const VehiclesPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (initialVehicleId && initialVehicleId !== activeVehicleId) {
+      handleOpenDetail(initialVehicleId, false);
+    }
+  }, [initialVehicleId]);
+
   const handleCloseDetail = () => {
     setActiveVehicleId(null);
     setVehicleDetail(null);
     setDetailError(null);
+    if (onVehicleSelect) {
+      onVehicleSelect(null);
+    }
   };
 
   return (
